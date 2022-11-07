@@ -1,0 +1,34 @@
+{
+  "plugins": ["stylelint-order"],
+  "extends": [
+    "stylelint-config-recommended",
+    "stylelint-config-styled-components",
+    "stylelint-config-prettier"
+  ],
+  "customSyntax": "postcss-syntax",
+  "rules": {
+    "color-named": [
+      "never",
+      {
+        "message": "use pallet variable instead",
+        "severity": "error"
+      }
+    ],
+    "color-no-hex": [
+      true,
+      {
+        "message": "use pallet variable instead",
+        "severity": "error"
+      }
+    ],
+    "function-disallowed-list": [
+      ["rgba", "hsla", "hsl", "rgb"],
+      {
+        "message": "use pallet variable instead",
+        "severity": "error"
+      }
+    ],
+    "order/properties-alphabetical-order": true,
+    "function-no-unknown": [true, { "ignoreFunctions": ["/$/"] }]
+  }
+}
