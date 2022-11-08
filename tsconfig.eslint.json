@@ -4,5 +4,11 @@
     "jsx": "react-jsx",
     "rootDir": "./src"
   },
-  "include": ["./.eslintrc.js", "./src/**/*", "./commitlint.config.js"]
+  "include": [
+    "./.eslintrc.js",
+    "./src/**/*",
+    "./commitlint.config.js",
+    "./webpack.config.ts",
+    "./babel.config.js"
+  ]
 }
