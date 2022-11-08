@@ -4,7 +4,7 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { Login } from "./pages/login/Login";
+import { Connect } from "./pages/connect/Connect";
 import { theme } from "./styled/theme";
 import { ThemeProvider } from "styled-components";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
@@ -16,6 +16,8 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 
 import "@solana/wallet-adapter-react-ui/styles.css";
+import "reset-css";
+import "./index.css";
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
@@ -29,6 +31,7 @@ function App() {
 
   // @TODO my eslint config
   // @TODO turbopack
+  // @TODO lint style to ci
   return (
     <ThemeProvider theme={theme}>
       <ConnectionProvider endpoint={endpoint}>
@@ -36,7 +39,7 @@ function App() {
           <WalletModalProvider>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Login />} />
+                <Route path="/" element={<Connect />} />
                 <Route path="wallet" element={<p>wallets</p>} />
                 <Route path="tokens" element={<p>tokens</p>} />
               </Routes>
