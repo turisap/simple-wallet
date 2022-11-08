@@ -8,6 +8,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.22",
     "@solana/wallet-adapter-wallets": "^0.19.5",
     "@solana/web3.js": "^1.66.2",
+    "antd": "^4.24.1",
     "babel-plugin-styled-components": "^2.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -84,5 +85,8 @@
     "webpack-dev-server": "^4.11.1",
     "webpackbar": "^5.0.2"
   },
-  "packageManager": "yarn@3.2.4"
+  "packageManager": "yarn@3.2.4",
+  "resolutions": {
+    "@solana/wallet-adapter-react-ui@^0.9.22": "patch:@solana/wallet-adapter-react-ui@npm%3A0.9.22#./.yarn/patches/@solana-wallet-adapter-react-ui-npm-0.9.22-d9ac5fd893.patch"
+  }
 }
