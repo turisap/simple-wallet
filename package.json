@@ -29,7 +29,7 @@
     "test": "node scripts/test.js",
     "lint:style": "stylelint './src/**/*.(tsx|css)'",
     "lint:type": "tsc --noEmit --project ./tsconfig.json --emitDeclarationOnly false",
-    "lint:es": "eslint"
+    "lint:es": "eslint ."
   },
   "browserslist": {
     "production": [
@@ -47,6 +47,14 @@
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
     "@types/styled-components": "^5.1.26",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-recommended": "^4.1.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "eslint-plugin-turisap": "^0.0.16",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "node-polyfill-webpack-plugin": "^2.0.1",

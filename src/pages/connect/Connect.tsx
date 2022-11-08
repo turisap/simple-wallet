@@ -1,15 +1,19 @@
-import React, { FC } from "react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import styled from "styled-components";
-import { useWallet } from "@solana/wallet-adapter-react";
+import type { FC } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import styled from "styled-components";
+
+import type { ThemedProps } from "../../typings";
+
 const ConnectPage = styled.div`
-  display: flex;
-  justify-content: center;
-  height: 100%;
   align-items: center;
-  background: ${(props) => props.theme.background};
+  background: ${(props: ThemedProps) => props.theme.background};
+  display: flex;
+  height: 100%;
+  justify-content: center;
 `;
 
 export const Connect: FC = () => {

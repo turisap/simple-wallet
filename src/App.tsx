@@ -1,24 +1,26 @@
+import "@solana/wallet-adapter-react-ui/styles.css";
+import "reset-css";
+import "./index.css";
+
 import React, { useMemo } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { Connect } from "./pages/connect/Connect";
-import { theme } from "./styled/theme";
-import { ThemeProvider } from "styled-components";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { clusterApiUrl } from "@solana/web3.js";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { clusterApiUrl } from "@solana/web3.js";
+import { ThemeProvider } from "styled-components";
 
-import "@solana/wallet-adapter-react-ui/styles.css";
-import "reset-css";
-import "./index.css";
 import { Layout } from "./components";
+import { Connect } from "./pages/connect/Connect";
+import { theme } from "./styled/theme";
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
@@ -30,8 +32,6 @@ function App() {
     [network]
   );
 
-  // @TODO version berry
-  // @TODO my eslint config
   // @TODO turbopack
   // @TODO lint style to ci
   return (

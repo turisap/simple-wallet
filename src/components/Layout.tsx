@@ -1,6 +1,8 @@
-import { useWallet } from "@solana/wallet-adapter-react";
-import React, { FC } from "react";
+import type { FC } from "react";
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+
+import { useWallet } from "@solana/wallet-adapter-react";
 import styled from "styled-components";
 
 const LayoutContainer = styled.div`
