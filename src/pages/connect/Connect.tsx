@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import styled from "styled-components";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Navigate } from "react-router-dom";
 
 const ConnectPage = styled.div`
   display: flex;
@@ -11,6 +13,12 @@ const ConnectPage = styled.div`
 `;
 
 export const Connect: FC = () => {
+  const { connected } = useWallet();
+
+  if (connected) {
+    return <Navigate to="/wallet" />;
+  }
+
   return (
     <ConnectPage>
       <WalletMultiButton>CONNECT</WalletMultiButton>
