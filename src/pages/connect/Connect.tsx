@@ -6,11 +6,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import styled from "styled-components";
 
-import type { ThemedProps } from "../../typings";
-
 const ConnectPage = styled.div`
   align-items: center;
-  background: ${(props: ThemedProps) => props.theme.backgrounds.page};
   display: flex;
   height: 100%;
   justify-content: center;
