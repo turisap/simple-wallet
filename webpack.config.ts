@@ -10,12 +10,13 @@ import type {
   Configuration as WebpackConfiguration,
   WebpackPluginInstance,
 } from "webpack";
+import webpack from "webpack";
 import type { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 import WebpackBar from "webpackbar";
 
 const DEMO_PORT = 8888;
 const PUBLIC_PATH = path.join(__dirname, "public");
-const APP_TITLE = "Simple Wallet";
+const __APP_TITLE__ = "Simple Wallet";
 
 interface Configuration
   extends WebpackConfiguration,
@@ -39,7 +40,6 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
   const __DEVELOPMENT__ = argv.mode === "development";
   const __PRODUCTION__ = argv.mode === "production";
 
-  // @ts-ignore
   process.env.NODE_ENV = argv.mode;
   process.env.BABEL_ENV = argv.mode;
 
@@ -158,8 +158,14 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
 
       new CleanWebpackPlugin(),
 
+      new webpack.DefinePlugin({
+        __DEVELOPMENT__: JSON.stringify(__DEVELOPMENT__),
+        __PRODUCTION__: JSON.stringify(__PRODUCTION__),
+        __APP_TITLE__: JSON.stringify(__APP_TITLE__),
+      }),
+
       new HtmlWebpackPlugin({
-        title: `${APP_TITLE}`,
+        title: `${__APP_TITLE__}`,
         template: path.join(PUBLIC_PATH, "/index.html"),
         templateParameters: {
           PUBLIC_PATH,
