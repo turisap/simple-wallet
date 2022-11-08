@@ -30,6 +30,7 @@ function App() {
     [network]
   );
 
+  // @TODO version berry
   // @TODO my eslint config
   // @TODO turbopack
   // @TODO lint style to ci
