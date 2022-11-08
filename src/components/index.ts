@@ -1,1 +1,1 @@
-export { AuthenticatedRoute } from "./AuthenticatedRoute";
+export { Layout } from "./Layout";

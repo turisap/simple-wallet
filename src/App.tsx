@@ -18,6 +18,7 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import "reset-css";
 import "./index.css";
+import { Layout } from "./components";
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
@@ -40,8 +41,10 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Connect />} />
-                <Route path="wallet" element={<p>wallets</p>} />
-                <Route path="tokens" element={<p>tokens</p>} />
+                <Route element={<Layout />}>
+                  <Route path="wallet" element={<p>wallets</p>} />
+                  <Route path="tokens" element={<p>tokens</p>} />
+                </Route>
               </Routes>
             </BrowserRouter>
           </WalletModalProvider>
