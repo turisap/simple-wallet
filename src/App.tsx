@@ -42,8 +42,10 @@ function App() {
               <Routes>
                 <Route path="/" element={<Connect />} />
                 <Route element={<Layout />}>
-                  <Route path="wallet" element={<p>wallets</p>} />
-                  <Route path="tokens" element={<p>tokens</p>} />
+                  <Route path="wallet">
+                    <Route index element={<p>tokens</p>} />
+                    <Route path="art" element={<p>NFTs</p>} />
+                  </Route>
                 </Route>
               </Routes>
             </BrowserRouter>
