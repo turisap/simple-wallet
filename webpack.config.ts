@@ -1,8 +1,10 @@
 import openBrowser from "react-dev-utils/openBrowser";
 
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { DuplicatesPlugin } from "inspectpack/plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
 import path from "path";
 import TerserPlugin from "terser-webpack-plugin";
@@ -101,6 +103,10 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         new TerserPlugin({
           extractComments: false,
         }),
+        // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+        // `...`,
+        // @TODO check how it works for prod builds
+        new CssMinimizerPlugin(),
       ],
     },
 
@@ -120,7 +126,11 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
       rules: [
         {
           test: /\.css$/i,
-          use: ["style-loader", "css-loader"],
+          use: [
+            // @TODO check how it works for prod builds
+            __DEVELOPMENT__ ? "style-loader" : MiniCssExtractPlugin.loader,
+            "css-loader",
+          ],
         },
         {
           test: /.(png)$/,
@@ -154,6 +164,13 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
     },
 
     plugins: [
+      // @TODO check how it works for prod builds
+      new MiniCssExtractPlugin({
+        filename: __PRODUCTION__ ? "[name]-[contenthash].css" : "[name].css",
+        chunkFilename: "[id].css",
+        ignoreOrder: true,
+      }),
+
       new NodePolyfillPlugin(),
 
       new CleanWebpackPlugin(),
