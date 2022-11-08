@@ -32,8 +32,6 @@ function App() {
     [network]
   );
 
-  // @TODO turbopack
-  // @TODO lint style to ci
   return (
     <ThemeProvider theme={theme}>
       <ConnectionProvider endpoint={endpoint}>
