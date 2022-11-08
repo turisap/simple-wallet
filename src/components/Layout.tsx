@@ -1,5 +1,6 @@
+import { useWallet } from "@solana/wallet-adapter-react";
 import React, { FC } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const LayoutContainer = styled.div`
@@ -9,10 +10,14 @@ const LayoutContainer = styled.div`
 `;
 
 export const Layout: FC = () => {
-  return (
+  const { connected } = useWallet();
+
+  return connected ? (
     <LayoutContainer>
       <Outlet />
     </LayoutContainer>
+  ) : (
+    <Navigate to="/" />
   );
 };
 
