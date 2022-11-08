@@ -1,6 +1,5 @@
 import "@solana/wallet-adapter-react-ui/styles.css";
 import "reset-css";
-import "./index.css";
 
 import React, { useMemo } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -20,9 +19,8 @@ import { ThemeProvider } from "styled-components";
 
 import { LayoutComponent } from "./components";
 import { Connect } from "./pages/connect/Connect";
+import { GlobalStyle } from "./styled/globalStyles";
 import { theme } from "./styled/theme";
-
-// @TODO create global style styled components
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
@@ -36,6 +34,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} autoConnect={true}>
           <WalletModalProvider>
