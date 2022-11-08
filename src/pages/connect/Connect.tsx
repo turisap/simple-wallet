@@ -10,7 +10,7 @@ import type { ThemedProps } from "../../typings";
 
 const ConnectPage = styled.div`
   align-items: center;
-  background: ${(props: ThemedProps) => props.theme.background};
+  background: ${(props: ThemedProps) => props.theme.backgrounds.page};
   display: flex;
   height: 100%;
   justify-content: center;

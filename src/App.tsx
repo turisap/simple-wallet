@@ -1,5 +1,4 @@
 import "@solana/wallet-adapter-react-ui/styles.css";
-import "antd/dist/antd.css";
 import "reset-css";
 import "./index.css";
 
@@ -22,6 +21,8 @@ import { ThemeProvider } from "styled-components";
 import { LayoutComponent } from "./components";
 import { Connect } from "./pages/connect/Connect";
 import { theme } from "./styled/theme";
+
+// @TODO create global style styled components
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;

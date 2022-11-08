@@ -3,18 +3,16 @@ import React from "react";
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 
 import { useWallet } from "@solana/wallet-adapter-react";
-import { Layout } from "antd";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import type { ThemedProps } from "../typings";
-
-const { Header, Footer, Sider, Content } = Layout;
 
 const LayoutContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr;
   grid-template-rows: 1fr;
   height: 100%;
+  padding: 100px 60px;
 `;
 
 const NavigationBar = styled.div`
@@ -23,16 +21,38 @@ const NavigationBar = styled.div`
   grid-gap: 16px;
   grid-template-rows: repeat(auto-fill, 48px);
   justify-items: stretch;
-  padding: 60px 24px;
 `;
 
-const NavigationButton = styled.span`
+const gradient = css`
+  /* stylelint-disable */
+  background: repeating-linear-gradient(
+    45deg,
+    #121214,
+    #121214 1px,
+    #61e309 1px,
+    #61e309 30px
+  );
+  /* stylelint-enable */
+`;
+
+const NavigationButton = styled.span<ThemedProps<{ isActive: boolean }>>`
   align-items: center;
-  border: 2px solid ${(props: ThemedProps) => props.theme.borders.button};
-  border-radius: 8px;
+  ${(props) =>
+    props.isActive
+      ? gradient
+      : `background: ${props.theme.backgrounds.button}`};
+  border-radius: 16px;
+  color: ${(props: ThemedProps) => props.theme.text.button};
   display: flex;
+  font-weight: 600;
   height: 100%;
   justify-content: center;
+
+  &:hover {
+    background: ${(props: ThemedProps) => props.theme.primary};
+    color: ${(props: ThemedProps) => props.theme.text.buttonHover};
+    cursor: pointer;
+  }
 `;
 
 export const LayoutComponent: FC = () => {
@@ -43,13 +63,20 @@ export const LayoutComponent: FC = () => {
   }
 
   return (
-    <Layout>
-      <Sider>Sider</Sider>
-      <Content>
-        <Outlet />
-      </Content>
-    </Layout>
+    <LayoutContainer>
+      <NavigationBar>
+        <NavLink to={"/wallet"}>
+          {({ isActive }) => (
+            <NavigationButton isActive={isActive}>Wallet</NavigationButton>
+          )}
+        </NavLink>
+        <NavLink to={"/arts"}>
+          {({ isActive }) => (
+            <NavigationButton isActive={isActive}>NFTs</NavigationButton>
+          )}
+        </NavLink>
+      </NavigationBar>
+      <Outlet />
+    </LayoutContainer>
   );
 };
-
-export default Layout;
