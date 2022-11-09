@@ -2,6 +2,7 @@ import openBrowser from "react-dev-utils/openBrowser";
 
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { DuplicatesPlugin } from "inspectpack/plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
@@ -58,7 +59,9 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
     prodPlugins.push(
       new DuplicatesPlugin({
         verbose: false,
-      })
+      }),
+
+      new ForkTsCheckerWebpackPlugin()
     );
   }
 
