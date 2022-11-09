@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "webpack build --mode production",
+    "build:analise": "yarn build --env analise",
     "serve": "webpack serve --mode development",
     "lint:style": "stylelint './src/**/*.(tsx|css)'",
     "lint:type": "tsc --noEmit --project ./tsconfig.json --emitDeclarationOnly false",
@@ -46,6 +47,7 @@
     "@types/react-dev-utils": "^9.0.11",
     "@types/react-dom": "^18.0.8",
     "@types/styled-components": "^5.1.26",
+    "@types/webpack-bundle-analyzer": "^4.6.0",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "babel-loader": "^9.1.0",
@@ -80,6 +82,7 @@
     "tsc-files": "^1.1.3",
     "typescript": "^4.8.4",
     "webpack": "^5.74.0",
+    "webpack-bundle-analyzer": "^4.7.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1",
     "webpackbar": "^5.0.2"

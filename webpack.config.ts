@@ -13,6 +13,7 @@ import type {
   WebpackPluginInstance,
 } from "webpack";
 import webpack from "webpack";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import type { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 import WebpackBar from "webpackbar";
 
@@ -28,7 +29,6 @@ interface Configuration
 
 type CustomEnv = {
   testing: boolean;
-  name: string;
   analise: boolean;
 };
 
@@ -41,12 +41,14 @@ type ConfigFn = (env: CustomEnv, argv: ArgV) => Configuration;
 const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
   const __DEVELOPMENT__ = argv.mode === "development";
   const __PRODUCTION__ = argv.mode === "production";
+  const __ANALISE__ = env.analise;
 
   process.env.NODE_ENV = argv.mode;
   process.env.BABEL_ENV = argv.mode;
 
   const devPlugins: WebpackPluginInstance[] = [];
   const prodPlugins: WebpackPluginInstance[] = [];
+  const infraPlugins: WebpackPluginInstance[] = [];
 
   if (__DEVELOPMENT__) {
     devPlugins.push(new WebpackBar());
@@ -56,6 +58,14 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
     prodPlugins.push(
       new DuplicatesPlugin({
         verbose: false,
+      })
+    );
+  }
+
+  if (__ANALISE__) {
+    infraPlugins.push(
+      new BundleAnalyzerPlugin({
+        defaultSizes: "gzip",
       })
     );
   }
@@ -75,7 +85,7 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".json", ".css"],
     },
 
-    devtool: __PRODUCTION__ ? "nosources-source-map" : "eval-source-map",
+    devtool: __PRODUCTION__ ? false : "eval-source-map",
 
     devServer: {
       static: {
@@ -103,8 +113,6 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         new TerserPlugin({
           extractComments: false,
         }),
-        // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-        // `...`,
         // @TODO check how it works for prod builds
         new CssMinimizerPlugin(),
       ],
@@ -192,6 +200,8 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
       ...devPlugins,
 
       ...prodPlugins,
+
+      ...infraPlugins,
     ],
   };
 };
