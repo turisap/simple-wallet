@@ -1,5 +1,6 @@
 import type { FC } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Watch } from "react-loader-spinner";
 import { Navigate } from "react-router-dom";
 
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -13,19 +14,42 @@ const ConnectPage = styled.div`
   justify-content: center;
 `;
 
-// @TODO forktscheckr for prod
-// add analyze
-// add route splitting code
-export const Connect: FC = () => {
-  const { connected } = useWallet();
+const StyledConnectButton = styled(WalletMultiButton)`
+  background: ${(props) => props.theme.primary};
+  border-radius: 16px;
+`;
 
-  if (connected) {
+export const Connect: FC = () => {
+  const [loading, setLoading] = useState(true);
+  const { connected, connecting } = useWallet();
+
+  useEffect(() => {
+    const id = setTimeout(setLoading, 500, false);
+
+    return () => clearTimeout(id);
+  }, []);
+
+  if (connecting || loading) {
+    return (
+      <ConnectPage>
+        <Watch
+          height="80"
+          width="80"
+          radius="48"
+          color={"#61e309"}
+          visible={true}
+        />
+      </ConnectPage>
+    );
+  }
+
+  if (connected && !loading) {
     return <Navigate to="/wallet" />;
   }
 
   return (
     <ConnectPage>
-      <WalletMultiButton>CONNECT</WalletMultiButton>
+      <StyledConnectButton>CONNECT</StyledConnectButton>
     </ConnectPage>
   );
 };

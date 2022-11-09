@@ -3,6 +3,7 @@ import React from "react";
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 
 import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
 import styled, { css } from "styled-components";
 
 const LayoutContainer = styled.div`
@@ -57,6 +58,11 @@ const NavigationButton = styled.span<{ isActive: boolean }>`
   }
 `;
 
+const StyledDisconnectButton = styled(WalletDisconnectButton)`
+  background: ${(props) => props.theme.backgrounds.button};
+  border-radius: 16px;
+`;
+
 export const LayoutComponent: FC = () => {
   const { connected } = useWallet();
 
@@ -77,6 +83,7 @@ export const LayoutComponent: FC = () => {
             <NavigationButton isActive={isActive}>NFTs</NavigationButton>
           )}
         </NavLink>
+        <StyledDisconnectButton />
       </NavigationBar>
       <Outlet />
     </LayoutContainer>
