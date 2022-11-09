@@ -10,6 +10,7 @@ import {
   rawBalance$,
   rawTokens$,
   solBalance$,
+  tokensInfo$,
   tokensNumber$,
 } from "@stores/walletStore";
 import { useObservableState } from "observable-hooks";
@@ -29,6 +30,7 @@ export const TokensPage: FC = () => {
   const { publicKey } = useWallet();
   const solBalance = useObservableState(solBalance$, "0");
   const splTokens = useObservableState(tokensNumber$, 0);
+  const tokensInfo = useObservableState(tokensInfo$, []);
 
   useEffect(() => {
     void connection
@@ -43,6 +45,8 @@ export const TokensPage: FC = () => {
       .then((info) => rawTokens$.next(info.value))
       .catch(console.error);
   }, []);
+
+  console.log(tokensInfo);
 
   return (
     <TokensPageContainer>
