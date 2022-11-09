@@ -16,6 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "types": ["./src/styled.d.ts"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

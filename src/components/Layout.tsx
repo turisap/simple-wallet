@@ -5,14 +5,12 @@ import { Navigate, NavLink, Outlet } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
 import styled, { css } from "styled-components";
 
-import type { ThemedProps } from "../typings";
-
 const LayoutContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr;
   grid-template-rows: 1fr;
   height: 100%;
-  padding: 100px 60px;
+  padding: 100px 60px 20px;
 `;
 
 const NavigationBar = styled.div`
@@ -35,6 +33,10 @@ const gradient = css`
   /* stylelint-enable */
 `;
 
+const hover = css`
+  background: ${(props) => props.theme.primary};
+`;
+
 const NavigationButton = styled.span<{ isActive: boolean }>`
   align-items: center;
   ${(props) =>
@@ -42,15 +44,15 @@ const NavigationButton = styled.span<{ isActive: boolean }>`
       ? gradient
       : `background: ${props.theme.backgrounds.button}`};
   border-radius: 16px;
-  color: ${(props: ThemedProps) => props.theme.text.button};
+  color: ${(props) => props.theme.text.button};
   display: flex;
   font-weight: 600;
   height: 100%;
   justify-content: center;
 
   &:hover {
-    background: ${(props: ThemedProps) => props.theme.primary};
-    color: ${(props: ThemedProps) => props.theme.text.buttonHover};
+    ${(props) => (props.isActive ? gradient : hover)};
+    color: ${(props) => props.theme.text.buttonHover};
     cursor: pointer;
   }
 `;

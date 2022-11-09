@@ -1,7 +1,7 @@
 import "@solana/wallet-adapter-react-ui/styles.css";
 import "reset-css";
 
-import React, { useMemo } from "react";
+import React, { lazy, Suspense, useMemo } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
@@ -21,6 +21,21 @@ import { LayoutComponent } from "./components";
 import { Connect } from "./pages/connect/Connect";
 import { GlobalStyle } from "./styled/globalStyles";
 import { theme } from "./styled/theme";
+
+const Tokens = lazy(() => import("./pages/tokens"));
+const NFTs = lazy(() => import("./pages/nfts"));
+
+const TokensPage = () => (
+  <Suspense fallback={<div>Page is Loading...</div>}>
+    <Tokens />
+  </Suspense>
+);
+
+const NFTsPage = () => (
+  <Suspense fallback={<div>Page is Loading...</div>}>
+    <NFTs />
+  </Suspense>
+);
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
@@ -42,10 +57,8 @@ function App() {
               <Routes>
                 <Route path="/" element={<Connect />} />
                 <Route element={<LayoutComponent />}>
-                  <Route path="wallet">
-                    <Route index element={<p>tokens</p>} />
-                    <Route path="art" element={<p>NFTs</p>} />
-                  </Route>
+                  <Route path="wallet" element={<TokensPage />} />
+                  <Route path="arts" element={<NFTsPage />} />
                 </Route>
               </Routes>
             </BrowserRouter>
