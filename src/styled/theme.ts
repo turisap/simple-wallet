@@ -5,6 +5,7 @@ export const theme: DefaultTheme = {
   backgrounds: {
     page: "#a0a19f",
     button: "#000",
+    plate: "#000",
   },
   borders: {
     button: "#eee",
@@ -12,5 +13,9 @@ export const theme: DefaultTheme = {
   text: {
     button: "#eee",
     buttonHover: "#000",
+    plate: "#eee",
+  },
+  radius: {
+    plate: "16px",
   },
 };

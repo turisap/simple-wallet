@@ -63,6 +63,10 @@ const StyledDisconnectButton = styled(WalletDisconnectButton)`
   border-radius: 16px;
 `;
 
+const ContentContainer = styled.div`
+  padding: 0 24px 24px;
+`;
+
 export const LayoutComponent: FC = () => {
   const { connected } = useWallet();
 
@@ -85,7 +89,9 @@ export const LayoutComponent: FC = () => {
         </NavLink>
         <StyledDisconnectButton />
       </NavigationBar>
-      <Outlet />
+      <ContentContainer>
+        <Outlet />
+      </ContentContainer>
     </LayoutContainer>
   );
 };

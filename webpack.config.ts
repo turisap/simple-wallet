@@ -20,6 +20,7 @@ import WebpackBar from "webpackbar";
 
 const DEMO_PORT = 8888;
 const PUBLIC_PATH = path.join(__dirname, "public");
+const SOURCE_PATH = path.resolve(__dirname, "src");
 const __APP_TITLE__ = "Simple Wallet";
 
 interface Configuration
@@ -86,6 +87,12 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
 
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".json", ".css"],
+
+      alias: {
+        "@components": path.resolve(SOURCE_PATH, "components"),
+        "@stores": path.resolve(SOURCE_PATH, "stores"),
+        "@pages": path.resolve(SOURCE_PATH, "pages"),
+      },
     },
 
     devtool: __PRODUCTION__ ? false : "eval-source-map",
