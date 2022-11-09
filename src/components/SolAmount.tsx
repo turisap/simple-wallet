@@ -7,24 +7,28 @@ type Props = {
   amount: string;
 };
 
-const SolAmountWrapper = styled.div`
+export const PlateWrapper = styled.div`
+  align-items: center;
+  align-self: stretch;
+
   background: ${(props) => props.theme.backgrounds.plate};
   border-radius: ${(props) => props.theme.radius.plate};
   color: ${(props) => props.theme.text.plate};
 
-  display: grid;
-  grid-gap: 8px;
+  display: flex;
+  flex-direction: column;
   grid-template-rows: 1fr;
-
-  padding: 60px;
+  justify-content: center;
+  justify-self: stretch;
+  line-height: 1.4;
 `;
 
 export const SolAmount: FC<Props> = (props) => {
   return (
-    <SolAmountWrapper>
+    <PlateWrapper>
       <span>You have got</span>
       <span>{props.amount} SOL</span>
-    </SolAmountWrapper>
+    </PlateWrapper>
   );
 };
 

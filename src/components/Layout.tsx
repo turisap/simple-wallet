@@ -64,7 +64,7 @@ const StyledDisconnectButton = styled(WalletDisconnectButton)`
 `;
 
 const ContentContainer = styled.div`
-  padding: 0 24px 24px;
+  padding-left: 24px;
 `;
 
 export const LayoutComponent: FC = () => {

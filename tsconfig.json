@@ -19,7 +19,8 @@
     "paths": {
       "@components/*": ["components/*"],
       "@pages/*": ["pages/*"],
-      "@stores/*": ["stores/*"]
+      "@stores/*": ["stores/*"],
+      "@typings/*": ["typings/*"]
     }
   },
   "types": ["./src/styled.d.ts"],
