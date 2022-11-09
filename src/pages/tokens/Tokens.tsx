@@ -3,17 +3,9 @@ import React, { useEffect } from "react";
 
 import NumberSplTokens from "@components/NumberSplTokens";
 import SolAmount from "@components/SolAmount";
-import { TOKEN_PROGRAM_ID } from "@saberhq/token-utils";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import type { PublicKey } from "@solana/web3.js";
-import {
-  rawBalance$,
-  rawTokens$,
-  solBalance$,
-  tokensInfo$,
-  tokensNumber$,
-} from "@stores/walletStore";
-import { useObservableState } from "observable-hooks";
+import { useWallet } from "@solana/wallet-adapter-react";
+import walletStore from "@stores/walletStore";
+import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 const TokensPageContainer = styled.div`
@@ -25,35 +17,27 @@ const TokensPageContainer = styled.div`
   grid-template-rows: 160px 1fr;
 `;
 
-export const TokensPage: FC = () => {
-  const { connection } = useConnection();
+export const TokensPage: FC = observer(() => {
   const { publicKey } = useWallet();
-  const solBalance = useObservableState(solBalance$, "0");
-  const splTokens = useObservableState(tokensNumber$, 0);
-  const tokensInfo = useObservableState(tokensInfo$, []);
 
   useEffect(() => {
-    void connection
-      .getBalance(publicKey as PublicKey)
-      .then((balance) => rawBalance$.next(balance))
-      .catch(console.error);
-
-    void connection
-      .getTokenAccountsByOwner(publicKey as PublicKey, {
-        programId: TOKEN_PROGRAM_ID,
-      })
-      .then((info) => rawTokens$.next(info.value))
-      .catch(console.error);
+    // void connection
+    //   .getTokenAccountsByOwner(publicKey as PublicKey, {
+    //     programId: TOKEN_PROGRAM_ID,
+    //   })
+    //   .then((info) => rawTokens$.next(info.value))
+    //   .catch(console.error);
+    if (publicKey) {
+      void walletStore.getSolBalance(publicKey);
+    }
   }, []);
-
-  console.log(tokensInfo);
 
   return (
     <TokensPageContainer>
-      <SolAmount amount={solBalance} />
-      <NumberSplTokens number={splTokens} />
+      <SolAmount amount={walletStore.sol} />
+      <NumberSplTokens number={0} />
     </TokensPageContainer>
   );
-};
+});
 
 export default TokensPage;

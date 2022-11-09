@@ -1,31 +1,35 @@
-import { u64 } from "@saberhq/token-utils";
-import { AccountLayout } from "@solana/spl-token";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import type { AccountsInfoData, TokenAccountLayout } from "@typings/api";
-import { BehaviorSubject, map } from "rxjs";
+import type { PublicKey } from "@solana/web3.js";
+import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { action, makeObservable, observable, runInAction } from "mobx";
 
 import { MAX_DECIMALS } from "../constants";
 
-// Sol balance
-export const rawBalance$ = new BehaviorSubject<number>(0);
-export const solBalance$ = rawBalance$.pipe(
-  map((balance) => `${balance / LAMPORTS_PER_SOL}`),
-  map((sols) => parseFloat(sols).toFixed(MAX_DECIMALS))
-);
+class WalletStore {
+  private connection: Connection;
+  private solBalance = 0;
 
-// Tokens balances
-export const rawTokens$ = new BehaviorSubject<AccountsInfoData[]>([]);
-export const tokensNumber$ = rawTokens$.pipe(map((tokens) => tokens.length));
-export const tokensInfo$ = rawTokens$.pipe(
-  map((tokens) =>
-    tokens.map(
-      (token) => AccountLayout.decode(token.account.data) as TokenAccountLayout
-    )
-  ),
-  map((accInfo: TokenAccountLayout[]) =>
-    accInfo.map((acc) => ({
-      amount: u64.fromBuffer(acc.amount),
-      mint: new PublicKey(acc.mint).toString(),
-    }))
-  )
-);
+  constructor() {
+    this.connection = new Connection(
+      "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d"
+    );
+
+    makeObservable<WalletStore, "solBalance">(this, {
+      solBalance: observable,
+      getSolBalance: action,
+    });
+  }
+
+  get sol() {
+    return (this.solBalance / LAMPORTS_PER_SOL).toFixed(MAX_DECIMALS);
+  }
+
+  public async getSolBalance(publicKey: PublicKey) {
+    const balance = await this.connection.getBalance(publicKey);
+
+    runInAction(() => {
+      this.solBalance = balance;
+    });
+  }
+}
+
+export default new WalletStore();

@@ -161,7 +161,7 @@ module.exports = {
     "import/order": "off",
     "import/newline-after-import": "warn",
     "import/no-duplicates": "warn",
-    "no-console": ["off"],
+    "no-console": ["error"],
     "no-magic-numbers": "off",
     "require-await": "off",
     "simple-import-sort/exports": "warn",
