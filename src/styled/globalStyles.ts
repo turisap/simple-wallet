@@ -1,8 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
-import type { ThemedProps } from "../typings";
-
-export const GlobalStyle = createGlobalStyle<ThemedProps>`
+export const GlobalStyle = createGlobalStyle`
   
 body {
   font-family: "Roboto Mono", monospace;

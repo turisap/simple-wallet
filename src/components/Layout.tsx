@@ -35,7 +35,7 @@ const gradient = css`
   /* stylelint-enable */
 `;
 
-const NavigationButton = styled.span<ThemedProps<{ isActive: boolean }>>`
+const NavigationButton = styled.span<{ isActive: boolean }>`
   align-items: center;
   ${(props) =>
     props.isActive

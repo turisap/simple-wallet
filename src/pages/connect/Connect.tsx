@@ -13,6 +13,9 @@ const ConnectPage = styled.div`
   justify-content: center;
 `;
 
+// @TODO forktscheckr for prod
+// add analyze
+// add route splitting code
 export const Connect: FC = () => {
   const { connected } = useWallet();
 
