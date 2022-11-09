@@ -12,6 +12,8 @@
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.pnp.loader.mjs
+.pnp.cjs
 
 # testing
 /coverage

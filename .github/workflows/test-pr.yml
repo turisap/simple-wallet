@@ -49,7 +49,7 @@ jobs:
 
   lint_style:
     runs-on: ubuntu-latest
-    name: Lint ESLint
+    name: Lint Stylelint
     steps:
       - uses: actions/checkout@v2
 
