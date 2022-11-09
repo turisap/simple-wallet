@@ -1,0 +1,13 @@
+diff --git a/package.json b/package.json
+index 89895c5953c685245bad550e6af9dcfcf390dcf8..d8d52b2df24f8b5a9cff4969e0e2d246043edeea 100644
+--- a/package.json
++++ b/package.json
+@@ -17,7 +17,7 @@
+     "node": ">=16"
+   },
+   "type": "module",
+-  "sideEffects": false,
++  "sideEffects": ["styles.css"],
+   "main": "./lib/cjs/index.js",
+   "module": "./lib/esm/index.js",
+   "types": "./lib/types/index.d.ts",

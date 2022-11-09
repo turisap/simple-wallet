@@ -1,24 +1,41 @@
-import React, { useMemo } from "react";
+import "@solana/wallet-adapter-react-ui/styles.css";
+import "reset-css";
+
+import React, { lazy, Suspense, useMemo } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { Connect } from "./pages/connect/Connect";
-import { theme } from "./styled/theme";
-import { ThemeProvider } from "styled-components";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { clusterApiUrl } from "@solana/web3.js";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { clusterApiUrl } from "@solana/web3.js";
+import { ThemeProvider } from "styled-components";
 
-import "@solana/wallet-adapter-react-ui/styles.css";
-import "reset-css";
-import "./index.css";
-import { Layout } from "./components";
+import { LayoutComponent } from "./components";
+import { Connect } from "./pages/connect/Connect";
+import { GlobalStyle } from "./styled/globalStyles";
+import { theme } from "./styled/theme";
+
+const Tokens = lazy(() => import("./pages/tokens"));
+const NFTs = lazy(() => import("./pages/nfts"));
+
+const TokensPage = () => (
+  <Suspense fallback={<div>Page is Loading...</div>}>
+    <Tokens />
+  </Suspense>
+);
+
+const NFTsPage = () => (
+  <Suspense fallback={<div>Page is Loading...</div>}>
+    <NFTs />
+  </Suspense>
+);
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
@@ -30,22 +47,18 @@ function App() {
     [network]
   );
 
-  // @TODO my eslint config
-  // @TODO turbopack
-  // @TODO lint style to ci
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} autoConnect={true}>
           <WalletModalProvider>
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Connect />} />
-                <Route element={<Layout />}>
-                  <Route path="wallet">
-                    <Route index element={<p>tokens</p>} />
-                    <Route path="art" element={<p>NFTs</p>} />
-                  </Route>
+                <Route element={<LayoutComponent />}>
+                  <Route path="wallet" element={<TokensPage />} />
+                  <Route path="arts" element={<NFTsPage />} />
                 </Route>
               </Routes>
             </BrowserRouter>
