@@ -21,7 +21,7 @@ import { MAX_DECIMALS } from "../constants";
 
 type PrivateObservables = "solBalance";
 
-class WalletStore {
+export class WalletStore {
   private connection: Connection;
   private solBalance = 0;
   private tokenListContainer: TokenListContainer | null = null;
@@ -74,10 +74,12 @@ class WalletStore {
     );
 
     const accountData: TokenAccountLayoutParsed[] = accountInfos.map(
-      (account) => ({
-        mint: new PublicKey(account.mint),
-        amount: u64.fromBuffer(account.amount),
-      })
+      (account) => {
+        return {
+          mint: new PublicKey(account.mint),
+          amount: u64.fromBuffer(account.amount),
+        };
+      }
     );
 
     const splTokens = await this.getTokenList();
@@ -88,19 +90,28 @@ class WalletStore {
         (splToken) => splToken.address === tokenAccount.mint.toString()
       );
 
+      // @TODO redo on TokenAmount
       if (token) {
         result.push({
           ...token,
           mint: tokenAccount.mint,
-          amount: new u64(
-            WalletStore.lamportsToBalance(tokenAccount.amount, token.decimals)
-          ),
+          amount: tokenAccount.amount,
         });
       }
     }
 
     runInAction(() => {
-      this.splTokens = result;
+      this.splTokens = result.sort((a, b) => {
+        const aN = a.amount.toNumber();
+        const bN = b.amount.toNumber();
+
+        if (aN > bN) return -1;
+
+        if (bN > aN) return 1;
+
+        return 0;
+      });
+
       this.splLoading = false;
     });
   }
@@ -113,7 +124,7 @@ class WalletStore {
     return this.tokenListContainer.getList();
   }
 
-  private static lamportsToBalance(value: BN, decimals?: number): number {
+  public static lamportsToBalance(value: BN, decimals?: number): number {
     if (!decimals) {
       return 0;
     }

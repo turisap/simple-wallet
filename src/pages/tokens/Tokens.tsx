@@ -22,13 +22,11 @@ const TokensPageContainer = styled.div`
 
 const Content = styled.div<{ isLoading: boolean }>`
   align-items: ${(props) => (props.isLoading ? "center" : "stretch")};
-  display: flex;
-  flex-direction: column;
+  align-self: stretch;
+  display: grid;
   grid-column: 1 / -1;
   grid-gap: 8px;
   justify-content: center;
-  max-height: 100%;
-  min-height: 100%;
   overflow: scroll;
 `;
 

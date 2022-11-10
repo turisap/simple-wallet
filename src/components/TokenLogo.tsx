@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 const LogoStyled = styled.img`
   border-radius: 50%;
+  grid-row: 1 / -1;
   height: 50px;
   width: 50px;
 
