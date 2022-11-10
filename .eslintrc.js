@@ -185,7 +185,7 @@ module.exports = {
     "turisap/no-magic-numbers": [
       "error",
       {
-        ignore: [-1, 0],
+        ignore: [-1, 0, 10],
         ignoreEnums: true,
         ignoreNumericLiteralTypes: true,
         ignoreArrayIndexes: true,

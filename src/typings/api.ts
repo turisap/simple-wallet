@@ -1,3 +1,4 @@
+import type { u64 } from "@saberhq/token-utils";
 import type { AccountInfo, PublicKey } from "@solana/web3.js";
 import type { Buffer } from "buffer";
 
@@ -6,7 +7,7 @@ export type AccountsInfoData = {
   account: AccountInfo<Buffer>;
 };
 
-export type TokenAccountLayout = {
+export type TokenAccountLayoutDecoded = {
   mint: Buffer;
   owner: Buffer;
   amount: Buffer;
@@ -18,4 +19,9 @@ export type TokenAccountLayout = {
   isNative: Buffer;
   closeAuthorityOption: number;
   closeAuthority: Buffer;
+};
+
+export type TokenAccountLayoutParsed = {
+  mint: PublicKey;
+  amount: u64;
 };

@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import React, { useEffect } from "react";
 
+import Loader from "@components/Loader";
 import NumberSplTokens from "@components/NumberSplTokens";
 import SolAmount from "@components/SolAmount";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -15,27 +16,31 @@ const TokensPageContainer = styled.div`
   grid-gap: 24px;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 160px 1fr;
+  height: 100%;
+`;
+
+const Content = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1;
 `;
 
 export const TokensPage: FC = observer(() => {
   const { publicKey } = useWallet();
 
   useEffect(() => {
-    // void connection
-    //   .getTokenAccountsByOwner(publicKey as PublicKey, {
-    //     programId: TOKEN_PROGRAM_ID,
-    //   })
-    //   .then((info) => rawTokens$.next(info.value))
-    //   .catch(console.error);
     if (publicKey) {
       void walletStore.getSolBalance(publicKey);
+      void walletStore.getSplTokens(publicKey);
     }
   }, []);
 
   return (
     <TokensPageContainer>
       <SolAmount amount={walletStore.sol} />
-      <NumberSplTokens number={0} />
+      <NumberSplTokens number={walletStore.splTokens.length} />
+      <Content>{true && <Loader />}</Content>
     </TokensPageContainer>
   );
 });

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@saberhq/token-utils": "^1.14.9",
+    "@solana/spl-token-registry": "^0.2.4574",
     "@solana/wallet-adapter-base": "^0.9.18",
     "@solana/wallet-adapter-react": "^0.15.24",
     "@solana/wallet-adapter-react-ui": "^0.9.22",

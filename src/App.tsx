@@ -4,6 +4,8 @@ import "reset-css";
 import React, { lazy, Suspense, useMemo } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import { LayoutComponent } from "@components/Layout";
+import { Connect } from "@pages/connect/Connect";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
@@ -15,12 +17,9 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
+import { GlobalStyle } from "@styled/globalStyles";
+import { theme } from "@styled/theme";
 import { ThemeProvider } from "styled-components";
-
-import { LayoutComponent } from "./components";
-import { Connect } from "./pages/connect/Connect";
-import { GlobalStyle } from "./styled/globalStyles";
-import { theme } from "./styled/theme";
 
 const Tokens = lazy(() => import("./pages/tokens"));
 const NFTs = lazy(() => import("./pages/nfts"));
@@ -37,6 +36,7 @@ const NFTsPage = () => (
   </Suspense>
 );
 
+// @TODO add loglevel
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
 

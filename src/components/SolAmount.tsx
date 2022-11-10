@@ -1,6 +1,8 @@
 import type { FC } from "react";
 import React from "react";
 
+import walletStore from "@stores/walletStore";
+import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 type Props = {
@@ -23,13 +25,13 @@ export const PlateWrapper = styled.div`
   line-height: 1.4;
 `;
 
-export const SolAmount: FC<Props> = (props) => {
+export const SolAmount: FC<Props> = observer((props) => {
   return (
     <PlateWrapper>
       <span>You have got</span>
-      <span>{props.amount} SOL</span>
+      {walletStore.solLoading ? "..." : <span>{props.amount} SOL</span>}
     </PlateWrapper>
   );
-};
+});
 
 export default SolAmount;
