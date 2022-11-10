@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import Loader from "@components/Loader";
 import NumberSplTokens from "@components/NumberSplTokens";
 import SolAmount from "@components/SolAmount";
+import TokenRow from "@components/TokenRow";
 import { useWallet } from "@solana/wallet-adapter-react";
 import walletStore from "@stores/walletStore";
 import { observer } from "mobx-react-lite";
@@ -19,11 +20,16 @@ const TokensPageContainer = styled.div`
   height: 100%;
 `;
 
-const Content = styled.div`
-  align-items: center;
+const Content = styled.div<{ isLoading: boolean }>`
+  align-items: ${(props) => (props.isLoading ? "center" : "stretch")};
   display: flex;
   flex-direction: column;
   grid-column: 1 / -1;
+  grid-gap: 8px;
+  justify-content: center;
+  max-height: 100%;
+  min-height: 100%;
+  overflow: scroll;
 `;
 
 export const TokensPage: FC = observer(() => {
@@ -40,7 +46,12 @@ export const TokensPage: FC = observer(() => {
     <TokensPageContainer>
       <SolAmount amount={walletStore.sol} />
       <NumberSplTokens number={walletStore.splTokens.length} />
-      <Content>{true && <Loader />}</Content>
+      <Content isLoading={walletStore.isLoading}>
+        {walletStore.isLoading && <Loader />}
+        {walletStore.splTokens.map((token) => (
+          <TokenRow {...token} key={token.mint.toString()} />
+        ))}
+      </Content>
     </TokensPageContainer>
   );
 });

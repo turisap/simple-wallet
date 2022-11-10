@@ -24,7 +24,6 @@
       "@styled/*": ["styled/*"]
     }
   },
-  "types": ["./src/typings/styled.d.ts" , "./src/typings/global.d.ts"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

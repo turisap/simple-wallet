@@ -7,7 +7,7 @@ import type {
   TokenAccountLayoutDecoded,
   TokenAccountLayoutParsed,
 } from "@typings/api";
-import type { WalletSPLToken } from "@typings/typings";
+import type { WalletSPLToken } from "@typings/general";
 import BN from "bn.js";
 import {
   action,
@@ -49,7 +49,7 @@ class WalletStore {
   }
 
   get isLoading() {
-    return this.solLoading && this.splLoading;
+    return this.solLoading || this.splLoading;
   }
 
   public async getSolBalance(publicKey: PublicKey) {
@@ -120,6 +120,7 @@ class WalletStore {
 
     const divisor = new BN(10).pow(new BN(decimals));
     const quotient = value.div(divisor);
+
     const remainder = value.mod(divisor);
 
     return quotient.toNumber() + remainder.toNumber() / divisor.toNumber();

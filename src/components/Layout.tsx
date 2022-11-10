@@ -9,9 +9,9 @@ import styled, { css } from "styled-components";
 const LayoutContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-template-rows: 1fr;
-  height: 100%;
-  padding: 100px 60px 20px;
+  grid-template-rows: calc(100vh - 160px);
+  max-width: 850px;
+  padding: 100px 60px 60px;
 `;
 
 const NavigationBar = styled.div`
