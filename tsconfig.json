@@ -21,7 +21,8 @@
       "@pages/*": ["pages/*"],
       "@stores/*": ["stores/*"],
       "@typings/*": ["typings/*"],
-      "@styled/*": ["styled/*"]
+      "@styled/*": ["styled/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "ts-node": {

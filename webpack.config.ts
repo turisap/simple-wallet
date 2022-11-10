@@ -95,6 +95,7 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         "@pages": path.resolve(SOURCE_PATH, "pages"),
         "@typings": path.resolve(SOURCE_PATH, "typings"),
         "@styled": path.resolve(SOURCE_PATH, "styled"),
+        "@utils": path.resolve(SOURCE_PATH, "utils"),
       },
     },
 

@@ -2,8 +2,8 @@ import type { FC } from "react";
 import React from "react";
 
 import { TokenLogo } from "@components/TokenLogo";
-import { WalletStore } from "@stores/walletStore";
 import type { WalletSPLToken } from "@typings/general";
+import { lamportsToBalance } from "@utils/token";
 import styled from "styled-components";
 
 import { MAX_DECIMALS } from "../constants";
@@ -21,10 +21,9 @@ const RowContainer = styled.div`
 `;
 
 export const TokenRow: FC<WalletSPLToken> = (props) => {
-  const tokenAmount = WalletStore.lamportsToBalance(
-    props.amount,
-    props.decimals
-  ).toFixed(MAX_DECIMALS);
+  const tokenAmount = lamportsToBalance(props.amount, props.decimals).toFixed(
+    MAX_DECIMALS
+  );
 
   return (
     <RowContainer>

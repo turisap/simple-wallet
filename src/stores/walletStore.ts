@@ -8,7 +8,7 @@ import type {
   TokenAccountLayoutParsed,
 } from "@typings/api";
 import type { WalletSPLToken } from "@typings/general";
-import BN from "bn.js";
+import { compareTokens } from "@utils/token";
 import {
   action,
   computed,
@@ -101,16 +101,7 @@ export class WalletStore {
     }
 
     runInAction(() => {
-      this.splTokens = result.sort((a, b) => {
-        const aN = a.amount.toNumber();
-        const bN = b.amount.toNumber();
-
-        if (aN > bN) return -1;
-
-        if (bN > aN) return 1;
-
-        return 0;
-      });
+      this.splTokens = result.sort(compareTokens);
 
       this.splLoading = false;
     });
@@ -122,19 +113,6 @@ export class WalletStore {
     }
 
     return this.tokenListContainer.getList();
-  }
-
-  public static lamportsToBalance(value: BN, decimals?: number): number {
-    if (!decimals) {
-      return 0;
-    }
-
-    const divisor = new BN(10).pow(new BN(decimals));
-    const quotient = value.div(divisor);
-
-    const remainder = value.mod(divisor);
-
-    return quotient.toNumber() + remainder.toNumber() / divisor.toNumber();
   }
 }
 
