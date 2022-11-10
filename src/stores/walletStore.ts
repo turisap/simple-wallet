@@ -9,9 +9,7 @@ class WalletStore {
   private solBalance = 0;
 
   constructor() {
-    this.connection = new Connection(
-      "https://p2p.rpcpool.com/82313b15169cb10f3ff230febb8d"
-    );
+    this.connection = new Connection(process.env.RPC_NODE);
 
     makeObservable<WalletStore, "solBalance">(this, {
       solBalance: observable,

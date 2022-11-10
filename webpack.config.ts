@@ -2,6 +2,7 @@ import openBrowser from "react-dev-utils/openBrowser";
 
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import DotenvWebpackPlugin from "dotenv-webpack";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { DuplicatesPlugin } from "inspectpack/plugin";
@@ -183,6 +184,10 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
     },
 
     plugins: [
+      new DotenvWebpackPlugin({
+        path: path.resolve(__dirname, ".env.development"),
+      }),
+
       // @TODO check how it works for prod builds
       new MiniCssExtractPlugin({
         filename: __PRODUCTION__ ? "[name]-[contenthash].css" : "[name].css",

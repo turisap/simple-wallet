@@ -23,7 +23,7 @@
       "@typings/*": ["typings/*"]
     }
   },
-  "types": ["./src/styled.d.ts"],
+  "types": ["./src/typings/styled.d.ts"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"
