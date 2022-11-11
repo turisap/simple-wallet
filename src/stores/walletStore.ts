@@ -4,10 +4,12 @@ import {
   TokenAccountLayout,
   TokenAmount,
 } from "@saberhq/token-utils";
+import { u64 } from "@solana/spl-token";
 import type { TokenInfo, TokenListContainer } from "@solana/spl-token-registry";
 import { TokenListProvider } from "@solana/spl-token-registry";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import type { TokenAccountLayoutDecoded } from "@typings/api";
+import { lamportsToBalance } from "@utils/token";
 import {
   action,
   computed,
@@ -29,6 +31,7 @@ export class WalletStore {
   public splLoading = true;
   public splTokens: Token[] = [];
   public amountMap: Map<string, TokenAmount> = new Map();
+  public customAmountMap: Map<string, number> = new Map();
 
   constructor() {
     this.connection = new Connection(process.env.RPC_NODE);
@@ -70,7 +73,19 @@ export class WalletStore {
     );
 
     const walletAccounts: TokenAccountLayoutDecoded[] = tokenAccounts.value.map(
-      (tokenAccount) => TokenAccountLayout.decode(tokenAccount.account.data)
+      (tokenAccount) => {
+        // const decodedSaber = TokenAccountLayout.decode(
+        //   tokenAccount.account.data
+        // );
+        // const decodedCustom = AccountLayout.decode(tokenAccount.account.data);
+
+        // console.log(
+        //   u64.fromBuffer(decodedCustom.amount).toString(),
+        //   u64.fromBuffer(decodedSaber.amount).toString()
+        // );
+
+        return TokenAccountLayout.decode(tokenAccount.account.data);
+      }
     );
 
     const splTokenList = await this.getTokenList();
@@ -87,15 +102,24 @@ export class WalletStore {
         const walletToken = new Token({ ...walletAccount, ...token });
         result.push(walletToken);
 
+        // @TODO leave only one of them
         this.amountMap.set(
           walletToken.symbol,
-          new TokenAmount(walletToken, token.decimals)
+          new TokenAmount(walletToken, walletToken.decimals)
+        );
+
+        this.customAmountMap.set(
+          walletToken.symbol,
+          lamportsToBalance(
+            u64.fromBuffer(walletAccount.amount),
+            token.decimals
+          )
         );
       }
     }
 
     runInAction(() => {
-      this.splTokens = result;
+      this.splTokens = result.sort();
 
       this.splLoading = false;
     });
