@@ -6,7 +6,7 @@ import type { Token } from "@saberhq/token-utils";
 import walletStore from "@stores/walletStore";
 import styled from "styled-components";
 
-import { MAX_DECIMALS } from "../constants";
+// import { MAX_DECIMALS } from "../constants";
 
 const RowContainer = styled.div`
   background: ${(props) => props.theme.backgrounds.plate};
@@ -21,15 +21,15 @@ const RowContainer = styled.div`
 `;
 
 export const TokenRow: FC<{ token: Token }> = (props) => {
-  // const amount = walletStore.amountMap.get(props.token.symbol);
-  const amountClassic = walletStore.customAmountMap.get(props.token.symbol);
+  const amount = walletStore.amountMap.get(props.token.symbol);
+  // const amountClassic = walletStore.customAmountMap.get(props.token.symbol);
 
   return (
     <RowContainer>
       <TokenLogo src={props.token.icon} />
       <span>{props.token.symbol}</span>
       <span>{props.token.name}</span>
-      <span>{amountClassic?.toFixed(MAX_DECIMALS)}</span>
+      <span>{amount?.formatUnits()}</span>
     </RowContainer>
   );
 };

@@ -73,19 +73,7 @@ export class WalletStore {
     );
 
     const walletAccounts: TokenAccountLayoutDecoded[] = tokenAccounts.value.map(
-      (tokenAccount) => {
-        // const decodedSaber = TokenAccountLayout.decode(
-        //   tokenAccount.account.data
-        // );
-        // const decodedCustom = AccountLayout.decode(tokenAccount.account.data);
-
-        // console.log(
-        //   u64.fromBuffer(decodedCustom.amount).toString(),
-        //   u64.fromBuffer(decodedSaber.amount).toString()
-        // );
-
-        return TokenAccountLayout.decode(tokenAccount.account.data);
-      }
+      (tokenAccount) => TokenAccountLayout.decode(tokenAccount.account.data)
     );
 
     const splTokenList = await this.getTokenList();
@@ -103,9 +91,11 @@ export class WalletStore {
         result.push(walletToken);
 
         // @TODO leave only one of them
+        // @TODO take a look https://github.com/saber-hq/saber-common/blob/master/packages/token-utils/src/layout.ts#L85
+        // @TODO fixed amount
         this.amountMap.set(
           walletToken.symbol,
-          new TokenAmount(walletToken, walletToken.decimals)
+          new TokenAmount(walletToken, u64.fromBuffer(walletAccount.amount))
         );
 
         this.customAmountMap.set(
