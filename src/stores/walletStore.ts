@@ -1,14 +1,13 @@
-import { TOKEN_PROGRAM_ID, u64 } from "@saberhq/token-utils";
-import { AccountLayout } from "@solana/spl-token";
+import {
+  Token,
+  TOKEN_PROGRAM_ID,
+  TokenAccountLayout,
+  TokenAmount,
+} from "@saberhq/token-utils";
 import type { TokenInfo, TokenListContainer } from "@solana/spl-token-registry";
 import { TokenListProvider } from "@solana/spl-token-registry";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import type {
-  TokenAccountLayoutDecoded,
-  TokenAccountLayoutParsed,
-} from "@typings/api";
-import type { WalletSPLToken } from "@typings/general";
-import { compareTokens } from "@utils/token";
+import type { TokenAccountLayoutDecoded } from "@typings/api";
 import {
   action,
   computed,
@@ -28,7 +27,8 @@ export class WalletStore {
 
   public solLoading = true;
   public splLoading = true;
-  public splTokens: WalletSPLToken[] = [];
+  public splTokens: Token[] = [];
+  public amountMap: Map<string, TokenAmount> = new Map();
 
   constructor() {
     this.connection = new Connection(process.env.RPC_NODE);
@@ -69,39 +69,33 @@ export class WalletStore {
       }
     );
 
-    const accountInfos: TokenAccountLayoutDecoded[] = tokenAccounts.value.map(
-      (tokenAccount) => AccountLayout.decode(tokenAccount.account.data)
+    const walletAccounts: TokenAccountLayoutDecoded[] = tokenAccounts.value.map(
+      (tokenAccount) => TokenAccountLayout.decode(tokenAccount.account.data)
     );
 
-    const accountData: TokenAccountLayoutParsed[] = accountInfos.map(
-      (account) => {
-        return {
-          mint: new PublicKey(account.mint),
-          amount: u64.fromBuffer(account.amount),
-        };
-      }
-    );
+    const splTokenList = await this.getTokenList();
+    const result: Token[] = [];
 
-    const splTokens = await this.getTokenList();
-    const result: WalletSPLToken[] = [];
+    for (const walletAccount of walletAccounts) {
+      const token = splTokenList.find((splToken) => {
+        return (
+          splToken.address === new PublicKey(walletAccount.mint).toString()
+        );
+      });
 
-    for (const tokenAccount of accountData) {
-      const token = splTokens.find(
-        (splToken) => splToken.address === tokenAccount.mint.toString()
-      );
-
-      // @TODO redo on TokenAmount
       if (token) {
-        result.push({
-          ...token,
-          mint: tokenAccount.mint,
-          amount: tokenAccount.amount,
-        });
+        const walletToken = new Token({ ...walletAccount, ...token });
+        result.push(walletToken);
+
+        this.amountMap.set(
+          walletToken.symbol,
+          new TokenAmount(walletToken, token.decimals)
+        );
       }
     }
 
     runInAction(() => {
-      this.splTokens = result.sort(compareTokens);
+      this.splTokens = result;
 
       this.splLoading = false;
     });

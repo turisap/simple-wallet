@@ -2,11 +2,9 @@ import type { FC } from "react";
 import React from "react";
 
 import { TokenLogo } from "@components/TokenLogo";
-import type { WalletSPLToken } from "@typings/general";
-import { lamportsToBalance } from "@utils/token";
+import type { Token } from "@saberhq/token-utils";
+import walletStore from "@stores/walletStore";
 import styled from "styled-components";
-
-import { MAX_DECIMALS } from "../constants";
 
 const RowContainer = styled.div`
   background: ${(props) => props.theme.backgrounds.plate};
@@ -20,17 +18,21 @@ const RowContainer = styled.div`
   padding: 16px;
 `;
 
-export const TokenRow: FC<WalletSPLToken> = (props) => {
-  const tokenAmount = lamportsToBalance(props.amount, props.decimals).toFixed(
-    MAX_DECIMALS
-  );
+export const TokenRow: FC<{ token: Token }> = (props) => {
+  // const tokenAmount = lamportsToBalance(props.amount, props.decimals).toFixed(
+  //   MAX_DECIMALS
+  // );
+
+  const amount = walletStore.amountMap.get(props.token.symbol);
+  console.log(amount?.denominator);
+  console.log(amount?.toExact());
 
   return (
     <RowContainer>
-      <TokenLogo src={props.logoURI} />
-      <span>{props.symbol}</span>
-      <span>{props.name}</span>
-      <span>{tokenAmount}</span>
+      <TokenLogo src={props.token.icon} />
+      <span>{props.token.symbol}</span>
+      <span>{props.token.name}</span>
+      <span>{amount?.toExact()}</span>
     </RowContainer>
   );
 };

@@ -47,7 +47,7 @@ export const TokensPage: FC = observer(() => {
       <Content isLoading={walletStore.isLoading}>
         {walletStore.isLoading && <Loader />}
         {walletStore.splTokens.map((token) => (
-          <TokenRow {...token} key={token.mint.toString()} />
+          <TokenRow token={token} key={token.symbol} />
         ))}
       </Content>
     </TokensPageContainer>
