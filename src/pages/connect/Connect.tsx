@@ -1,8 +1,8 @@
 import type { FC } from "react";
 import React, { useEffect, useState } from "react";
-import { Watch } from "react-loader-spinner";
 import { Navigate } from "react-router-dom";
 
+import Loader from "@components/Loader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import styled from "styled-components";
@@ -32,13 +32,7 @@ export const Connect: FC = () => {
   if (connecting || loading) {
     return (
       <ConnectPage>
-        <Watch
-          height="80"
-          width="80"
-          radius="48"
-          color={"#61e309"}
-          visible={true}
-        />
+        <Loader />
       </ConnectPage>
     );
   }

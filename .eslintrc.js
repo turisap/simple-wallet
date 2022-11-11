@@ -109,7 +109,7 @@ module.exports = {
         "@typescript-eslint/no-unsafe-argument": "warn",
         "@typescript-eslint/no-unsafe-assignment": "warn",
         "@typescript-eslint/no-unsafe-member-access": "warn",
-        "@typescript-eslint/no-unsafe-call": "warn",
+        "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unsafe-return": "warn",
         "@typescript-eslint/no-misused-promises": "warn",
         "@typescript-eslint/restrict-template-expressions": "warn",
@@ -161,7 +161,7 @@ module.exports = {
     "import/order": "off",
     "import/newline-after-import": "warn",
     "import/no-duplicates": "warn",
-    "no-console": ["off"],
+    "no-console": ["error"],
     "no-magic-numbers": "off",
     "require-await": "off",
     "simple-import-sort/exports": "warn",
@@ -185,7 +185,7 @@ module.exports = {
     "turisap/no-magic-numbers": [
       "error",
       {
-        ignore: [-1, 0],
+        ignore: [-1, 0, 1, 10],
         ignoreEnums: true,
         ignoreNumericLiteralTypes: true,
         ignoreArrayIndexes: true,

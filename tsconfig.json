@@ -14,9 +14,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@stores/*": ["stores/*"],
+      "@typings/*": ["typings/*"],
+      "@styled/*": ["styled/*"],
+      "@utils/*": ["utils/*"]
+    }
   },
-  "types": ["./src/styled.d.ts"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

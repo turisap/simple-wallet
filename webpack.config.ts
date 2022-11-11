@@ -2,6 +2,7 @@ import openBrowser from "react-dev-utils/openBrowser";
 
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import DotenvWebpackPlugin from "dotenv-webpack";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { DuplicatesPlugin } from "inspectpack/plugin";
@@ -20,6 +21,7 @@ import WebpackBar from "webpackbar";
 
 const DEMO_PORT = 8888;
 const PUBLIC_PATH = path.join(__dirname, "public");
+const SOURCE_PATH = path.resolve(__dirname, "src");
 const __APP_TITLE__ = "Simple Wallet";
 
 interface Configuration
@@ -86,6 +88,15 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
 
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".json", ".css"],
+
+      alias: {
+        "@components": path.resolve(SOURCE_PATH, "components"),
+        "@stores": path.resolve(SOURCE_PATH, "stores"),
+        "@pages": path.resolve(SOURCE_PATH, "pages"),
+        "@typings": path.resolve(SOURCE_PATH, "typings"),
+        "@styled": path.resolve(SOURCE_PATH, "styled"),
+        "@utils": path.resolve(SOURCE_PATH, "utils"),
+      },
     },
 
     devtool: __PRODUCTION__ ? false : "eval-source-map",
@@ -175,6 +186,10 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
     },
 
     plugins: [
+      new DotenvWebpackPlugin({
+        path: path.resolve(__dirname, ".env.development"),
+      }),
+
       // @TODO check how it works for prod builds
       new MiniCssExtractPlugin({
         filename: __PRODUCTION__ ? "[name]-[contenthash].css" : "[name].css",

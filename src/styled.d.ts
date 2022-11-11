@@ -6,6 +6,7 @@ declare module "styled-components" {
     backgrounds: {
       page: string;
       button: string;
+      plate: string;
     };
     borders: {
       button: string;
@@ -13,6 +14,10 @@ declare module "styled-components" {
     text: {
       button: string;
       buttonHover: string;
+      plate: string;
+    };
+    radius: {
+      plate: string;
     };
   }
 }

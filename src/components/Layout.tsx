@@ -9,9 +9,9 @@ import styled, { css } from "styled-components";
 const LayoutContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-template-rows: 1fr;
-  height: 100%;
-  padding: 100px 60px 20px;
+  grid-template-rows: calc(100vh - 160px);
+  max-width: 850px;
+  padding: 100px 60px 60px;
 `;
 
 const NavigationBar = styled.div`
@@ -63,6 +63,10 @@ const StyledDisconnectButton = styled(WalletDisconnectButton)`
   border-radius: 16px;
 `;
 
+const ContentContainer = styled.div`
+  padding-left: 24px;
+`;
+
 export const LayoutComponent: FC = () => {
   const { connected } = useWallet();
 
@@ -85,7 +89,9 @@ export const LayoutComponent: FC = () => {
         </NavLink>
         <StyledDisconnectButton />
       </NavigationBar>
-      <Outlet />
+      <ContentContainer>
+        <Outlet />
+      </ContentContainer>
     </LayoutContainer>
   );
 };

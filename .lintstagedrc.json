@@ -1,5 +1,5 @@
 {
   "*.(ts|tsx|js|json)": "prettier --write",
-  "*.(ts|tsx)": ["eslint", "tsc-files --noEmit"],
+  "*.(ts|tsx)": ["eslint"],
   "*.(tsx|css)": ["stylelint --fix"]
 }
