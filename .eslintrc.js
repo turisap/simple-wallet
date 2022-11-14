@@ -139,6 +139,12 @@ module.exports = {
             leadingUnderscore: "allow",
           },
           {
+            selector: "memberLike",
+            modifiers: ["private"],
+            format: ["camelCase"],
+            leadingUnderscore: "require",
+          },
+          {
             selector: "typeLike",
             format: ["PascalCase"],
           },

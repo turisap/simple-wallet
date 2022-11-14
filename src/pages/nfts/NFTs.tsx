@@ -1,7 +1,10 @@
 import type { FC } from "react";
-import React from "react";
+import React, { useEffect } from "react";
 
+import { useWallet } from "@solana/wallet-adapter-react";
+import { NftStore } from "@stores/nftStore";
 import styled from "styled-components";
+import { container } from "tsyringe";
 
 const NftsPageContainer = styled.div`
   align-items: center;
@@ -11,6 +14,16 @@ const NftsPageContainer = styled.div`
 `;
 
 export const NFTs: FC = () => {
+  const { publicKey } = useWallet();
+
+  useEffect(() => {
+    const store = container.resolve<NftStore>(NftStore);
+
+    if (publicKey) {
+      void store.getNfts(publicKey);
+    }
+  });
+
   return <NftsPageContainer>NFTs</NftsPageContainer>;
 };
 

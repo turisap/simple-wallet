@@ -96,6 +96,7 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         "@typings": path.resolve(SOURCE_PATH, "typings"),
         "@styled": path.resolve(SOURCE_PATH, "styled"),
         "@utils": path.resolve(SOURCE_PATH, "utils"),
+        "@nft": path.resolve(SOURCE_PATH, "nft"),
       },
     },
 
