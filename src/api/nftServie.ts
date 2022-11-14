@@ -1,5 +1,5 @@
 import { TOKEN_PROGRAM_ID } from "@saberhq/token-utils";
-import type { PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { singleton } from "tsyringe";
 
 import { Settings } from "./settings";
@@ -14,6 +14,19 @@ export class NftService {
         programId: TOKEN_PROGRAM_ID,
       });
 
-    return splAccounts;
+    const nftAccounts = splAccounts
+      .filter((t) => {
+        const amount = t.account?.data?.parsed?.info?.tokenAmount?.uiAmount;
+        const decimals = t.account?.data?.parsed?.info?.tokenAmount?.decimals;
+
+        return decimals === 0 && amount >= 1;
+      })
+      .map((t) => {
+        const address = t.account?.data?.parsed?.info?.mint;
+
+        return new PublicKey(address);
+      });
+
+    return nftAccounts;
   }
 }

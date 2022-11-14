@@ -44,7 +44,7 @@ export const Connect: FC = () => {
   }
 
   if (connected && !loading) {
-    return <Navigate to={state.redirectTo} />;
+    return <Navigate to={state?.redirectTo || "/wallet"} />;
   }
 
   return (

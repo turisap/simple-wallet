@@ -21,12 +21,13 @@ const TokensPageContainer = styled.div`
 `;
 
 const Content = styled.div<{ isLoading: boolean }>`
-  align-items: ${(props) => (props.isLoading ? "center" : "stretch")};
   align-self: stretch;
   display: grid;
   grid-column: 1 / -1;
   grid-gap: 8px;
-  justify-content: center;
+  grid-template-rows: repeat(auto-fill, 82px);
+  justify-content: stretch;
+  justify-items: ${(props) => (props.isLoading ? "center" : "stretch")};
   overflow: scroll;
 `;
 
@@ -35,6 +36,7 @@ export const TokensPage: FC = observer(() => {
 
   useEffect(() => {
     if (publicKey) {
+      // @TODO add a single load method
       void walletStore.getSolBalance(publicKey);
       void walletStore.getSplTokens(publicKey);
     }
