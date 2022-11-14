@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 import Loader from "@components/Loader";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -19,9 +19,15 @@ const StyledConnectButton = styled(WalletMultiButton)`
   border-radius: 16px;
 `;
 
+type AuthState = {
+  redirectTo: string;
+};
+
 export const Connect: FC = () => {
   const [loading, setLoading] = useState(true);
   const { connected, connecting } = useWallet();
+  const location = useLocation();
+  const state = location.state as AuthState;
 
   useEffect(() => {
     const id = setTimeout(setLoading, 500, false);
@@ -38,7 +44,7 @@ export const Connect: FC = () => {
   }
 
   if (connected && !loading) {
-    return <Navigate to="/wallet" />;
+    return <Navigate to={state.redirectTo} />;
   }
 
   return (
