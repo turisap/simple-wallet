@@ -1,4 +1,5 @@
 import type { PublicKey } from "@solana/web3.js";
+import type { Metadata } from "@utils/nfts";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { singleton } from "tsyringe";
 
@@ -7,7 +8,7 @@ import { NftService } from "../api/nftServie";
 @singleton()
 export class NftStore {
   public isLoading = true;
-  public nftList: unknown[] = [];
+  public nftList: Metadata[] = [];
 
   constructor(private _nftService: NftService) {
     makeObservable(this, {

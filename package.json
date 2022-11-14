@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@nfteyez/sol-rayz": "^0.10.2",
     "@saberhq/token-utils": "^1.14.9",
     "@solana/spl-token-registry": "^0.2.4574",
     "@solana/wallet-adapter-base": "^0.9.18",
@@ -12,6 +13,7 @@
     "@solana/web3.js": "^1.66.2",
     "@types/dotenv-webpack": "^7.0.3",
     "babel-plugin-styled-components": "^2.0.7",
+    "borsh": "^0.7.0",
     "dotenv-webpack": "^8.0.1",
     "mobx": "^6.6.2",
     "mobx-react-lite": "^3.4.0",

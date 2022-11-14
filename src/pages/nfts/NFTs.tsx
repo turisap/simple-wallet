@@ -9,8 +9,9 @@ import { container } from "tsyringe";
 
 const NftsPageContainer = styled.div`
   align-items: center;
-  display: flex;
+  display: grid;
   font-size: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 250px));
   justify-items: center;
 `;
 
@@ -24,9 +25,15 @@ export const NFTs: FC = observer(() => {
     }
   }, []);
 
-  // console.log(toJS(store.nftList));
-
-  return <NftsPageContainer>NFTs</NftsPageContainer>;
+  return (
+    <NftsPageContainer>
+      {store.nftList.map((nft) => (
+        <div key={nft.mint}>
+          <img src={nft.data.uri} />
+        </div>
+      ))}
+    </NftsPageContainer>
+  );
 });
 
 export default NFTs;
