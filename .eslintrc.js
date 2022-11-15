@@ -2,6 +2,7 @@ module.exports = {
   plugins: ["simple-import-sort", "import", "turisap"],
   extends: ["eslint:recommended", "plugin:prettier/recommended"],
   parser: "@babel/eslint-parser",
+  ignorePatterns: ["*.png"],
   env: {
     browser: true,
     node: true,

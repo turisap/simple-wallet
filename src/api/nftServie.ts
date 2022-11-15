@@ -1,6 +1,7 @@
 import { TOKEN_PROGRAM_ID } from "@saberhq/token-utils";
 import type { AccountInfo } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
+import type { NftInfo, NftInfoMap } from "@typings/nft";
 import { filterFulfilled } from "@utils/general";
 import { Metadata, METADATA_SCHEMA } from "@utils/nfts";
 import { deserializeUnchecked } from "borsh";
@@ -31,7 +32,7 @@ export class NftService {
     )[0];
   };
 
-  public async getUserNfts(publicKey: PublicKey): Promise<Metadata[]> {
+  public async getUserNfts(publicKey: PublicKey): Promise<NftInfoMap> {
     const { value: splAccounts } =
       await this._settings.connection.getParsedTokenAccountsByOwner(publicKey, {
         programId: TOKEN_PROGRAM_ID,
@@ -52,22 +53,24 @@ export class NftService {
         return new PublicKey(address);
       });
 
-    const metadataAcountsAddressPromises = await Promise.allSettled(
+    const metadataAccountsAddressPromises = await Promise.allSettled(
       nftAccounts.map(this.getSolanaMetadataAddress)
     );
 
-    const metadataAccounts = metadataAcountsAddressPromises
+    const metadataPDAaccounts = metadataAccountsAddressPromises
       .filter(filterFulfilled)
       .map((p) => (p as PromiseFulfilledResult<PublicKey>).value);
 
-    const metadataData: (AccountInfo<Buffer> | null)[] =
-      await this._settings.connection.getMultipleAccountsInfo(metadataAccounts);
-
-    if (!metadataAccounts?.length) {
-      return [];
+    if (!metadataPDAaccounts?.length) {
+      return new Map();
     }
 
-    return metadataData
+    const metadataData: (AccountInfo<Buffer> | null)[] =
+      await this._settings.connection.getMultipleAccountsInfo(
+        metadataPDAaccounts
+      );
+
+    const nftsData = metadataData
       .map((accountInfo) => {
         if (accountInfo?.data) {
           return deserializeUnchecked(
@@ -80,5 +83,33 @@ export class NftService {
       .filter(function isMeta(meta): meta is Metadata {
         return Boolean(meta);
       });
+
+    const nftsInfoResp = await Promise.allSettled(
+      nftsData.map((nft) => fetch(nft.data.uri))
+    );
+
+    const nftInfo: PromiseSettledResult<NftInfo | null>[] =
+      await Promise.allSettled(
+        nftsInfoResp.map((infoResp) => {
+          if (infoResp.status === "rejected") {
+            return null;
+          }
+
+          return infoResp.value.json() as NftInfo;
+        })
+      );
+
+    const nftInfoMap: NftInfoMap = new Map();
+
+    nftsData.forEach((nft, idx) => {
+      const info =
+        nftInfo[idx].status === "fulfilled"
+          ? (nftInfo[idx] as PromiseFulfilledResult<NftInfo>).value
+          : null;
+
+      nftInfoMap.set(nft, info);
+    });
+
+    return nftInfoMap;
   }
 }

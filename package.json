@@ -14,6 +14,7 @@
     "@types/dotenv-webpack": "^7.0.3",
     "babel-plugin-styled-components": "^2.0.7",
     "borsh": "^0.7.0",
+    "class-transformer": "^0.5.1",
     "dotenv-webpack": "^8.0.1",
     "mobx": "^6.6.2",
     "mobx-react-lite": "^3.4.0",
