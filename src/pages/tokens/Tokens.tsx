@@ -56,6 +56,7 @@ export const TokensPage: FC = observer(() => {
             token={token}
             key={token.symbol}
             amount={walletStore.amountMap.get(token.symbol)}
+            rate={walletStore.rates.get(token.symbol)}
           />
         ))}
       </Content>

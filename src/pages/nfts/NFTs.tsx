@@ -38,7 +38,10 @@ const NftPreview = styled.img`
 
 const NftName = styled.div`
   color: ${(props) => props.theme.text.plate};
+  overflow: hidden;
   padding: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const NFTs: FC = observer(() => {
