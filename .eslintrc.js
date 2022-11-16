@@ -2,6 +2,7 @@ module.exports = {
   plugins: ["simple-import-sort", "import", "turisap"],
   extends: ["eslint:recommended", "plugin:prettier/recommended"],
   parser: "@babel/eslint-parser",
+  ignorePatterns: ["*.png"],
   env: {
     browser: true,
     node: true,
@@ -137,6 +138,12 @@ module.exports = {
             modifiers: ["private", "public", "protected", "static", "readonly"],
             format: ["UPPER_CASE", "camelCase"],
             leadingUnderscore: "allow",
+          },
+          {
+            selector: "memberLike",
+            modifiers: ["private"],
+            format: ["camelCase"],
+            leadingUnderscore: "require",
           },
           {
             selector: "typeLike",

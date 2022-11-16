@@ -3,3 +3,8 @@ declare namespace NodeJS {
     RPC_NODE: string;
   }
 }
+
+declare module "*.png" {
+  const value: string;
+  export default value;
+}

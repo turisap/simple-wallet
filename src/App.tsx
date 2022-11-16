@@ -1,6 +1,3 @@
-import "@solana/wallet-adapter-react-ui/styles.css";
-import "reset-css";
-
 import React, { lazy, Suspense, useMemo } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -37,6 +34,8 @@ const NFTsPage = () => (
 );
 
 // @TODO add loglevel
+// @TODO save favourite addresses to PDA
+// @TODO add firebase remote config
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
 
@@ -58,7 +57,7 @@ function App() {
                 <Route path="/" element={<Connect />} />
                 <Route element={<LayoutComponent />}>
                   <Route path="wallet" element={<TokensPage />} />
-                  <Route path="arts" element={<NFTsPage />} />
+                  <Route path="nfts" element={<NFTsPage />} />
                 </Route>
               </Routes>
             </BrowserRouter>

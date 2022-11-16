@@ -96,6 +96,8 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         "@typings": path.resolve(SOURCE_PATH, "typings"),
         "@styled": path.resolve(SOURCE_PATH, "styled"),
         "@utils": path.resolve(SOURCE_PATH, "utils"),
+        "@nft": path.resolve(SOURCE_PATH, "nft"),
+        "@assets": path.resolve(SOURCE_PATH, "assets"),
       },
     },
 
@@ -156,7 +158,7 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         },
         {
           test: /.(png)$/,
-          type: "asset/resource",
+          type: "asset/inline",
         },
         {
           test: /-icon\.svg$/,

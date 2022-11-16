@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import React from "react";
-import { Navigate, NavLink, Outlet } from "react-router-dom";
+import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
@@ -69,9 +69,10 @@ const ContentContainer = styled.div`
 
 export const LayoutComponent: FC = () => {
   const { connected } = useWallet();
+  const location = useLocation();
 
   if (!connected) {
-    return <Navigate to="/" />;
+    return <Navigate to={"/"} state={{ redirectTo: location.pathname }} />;
   }
 
   return (
@@ -82,7 +83,7 @@ export const LayoutComponent: FC = () => {
             <NavigationButton isActive={isActive}>Wallet</NavigationButton>
           )}
         </NavLink>
-        <NavLink to={"/arts"}>
+        <NavLink to={"/nfts"}>
           {({ isActive }) => (
             <NavigationButton isActive={isActive}>NFTs</NavigationButton>
           )}

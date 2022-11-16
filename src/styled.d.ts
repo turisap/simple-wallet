@@ -1,23 +1,21 @@
 import "styled-components";
 
+type Tokens = "page" | "button" | "plate";
+
+type StyleSet = {
+  [T in Tokens]?: string;
+};
+
+type TextSet = StyleSet & {
+  buttonHover: string;
+};
+
 declare module "styled-components" {
   export interface DefaultTheme {
     primary: string;
-    backgrounds: {
-      page: string;
-      button: string;
-      plate: string;
-    };
-    borders: {
-      button: string;
-    };
-    text: {
-      button: string;
-      buttonHover: string;
-      plate: string;
-    };
-    radius: {
-      plate: string;
-    };
+    backgrounds: StyleSet;
+    borders: StyleSet;
+    text: TextSet;
+    radius: StyleSet;
   }
 }

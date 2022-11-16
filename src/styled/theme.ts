@@ -11,6 +11,7 @@ export const theme: DefaultTheme = {
   },
   borders: {
     button: "#eee",
+    plate: "#eee",
   },
   text: {
     button: "#eee",
