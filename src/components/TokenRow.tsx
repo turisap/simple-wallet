@@ -3,7 +3,6 @@ import React from "react";
 
 import { TokenLogo } from "@components/TokenLogo";
 import type { Token, TokenAmount } from "@saberhq/token-utils";
-import type { CoinGeckoRate } from "@typings/wallet";
 import styled from "styled-components";
 
 import { MAX_DECIMALS } from "../constants";
@@ -35,14 +34,10 @@ const AmountUSD = styled.div`
 type Props = {
   token: Token;
   amount?: TokenAmount;
-  rate?: CoinGeckoRate;
+  amountUsd?: string;
 };
 
 export const TokenRow: FC<Props> = (props) => {
-  const amountUSD =
-    props.rate?.current_price &&
-    Number(props.amount?.toFixed(MAX_DECIMALS)) * props.rate?.current_price;
-
   return (
     <RowContainer>
       <TokenLogo src={props.token.icon} />
@@ -52,7 +47,7 @@ export const TokenRow: FC<Props> = (props) => {
         <span>{props.amount?.toFixed(MAX_DECIMALS)}</span>
         <span>{props.token.symbol}</span>
       </TokenUnits>
-      <AmountUSD>{amountUSD?.toFixed(MAX_DECIMALS)}$</AmountUSD>
+      <AmountUSD>~{props.amountUsd}$</AmountUSD>
     </RowContainer>
   );
 };

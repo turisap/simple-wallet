@@ -1,6 +1,7 @@
 import type { Token, TokenAmount } from "@saberhq/token-utils";
 import type { PublicKey } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import type { CoinGeckoRate } from "@typings/wallet";
 import {
   action,
   computed,
@@ -63,7 +64,7 @@ export class WalletStore {
     }
   }
 
-  private async getSolBalance(publicKey: PublicKey) {
+  private async getSolBalance(publicKey: PublicKey): Promise<void> {
     const balance = await this._settings.connection.getBalance(publicKey);
 
     runInAction(() => {
@@ -72,7 +73,7 @@ export class WalletStore {
     });
   }
 
-  private async getSplTokens(publicKey: PublicKey) {
+  private async getSplTokens(publicKey: PublicKey): Promise<void> {
     const result = await this._walletService.getSplTokens(publicKey);
     const [amountMap, tokens] = result;
 
@@ -81,5 +82,16 @@ export class WalletStore {
       this.splTokens = tokens;
       this.splLoading = false;
     });
+  }
+
+  public static getUsdAmount(
+    rate?: CoinGeckoRate,
+    amount?: TokenAmount
+  ): string | undefined {
+    const amountUsdFull =
+      rate?.current_price &&
+      Number(amount?.toFixed(MAX_DECIMALS)) * rate?.current_price;
+
+    return amountUsdFull?.toFixed(2);
   }
 }

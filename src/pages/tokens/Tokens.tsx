@@ -51,14 +51,22 @@ export const TokensPage: FC = observer(() => {
       />
       <Content isLoading={walletStore.isLoading}>
         {walletStore.isLoading && <Loader />}
-        {walletStore.splTokens.map((token) => (
-          <TokenRow
-            token={token}
-            key={token.symbol}
-            amount={walletStore.amountMap.get(token.symbol)}
-            rate={walletStore.rates.get(token.symbol)}
-          />
-        ))}
+        {walletStore.splTokens.map((token) => {
+          const tokenAmount = walletStore.amountMap.get(token.symbol);
+          const amountUsd = WalletStore.getUsdAmount(
+            walletStore.rates.get(token.symbol),
+            tokenAmount
+          );
+
+          return (
+            <TokenRow
+              token={token}
+              key={token.symbol}
+              amount={tokenAmount}
+              amountUsd={amountUsd}
+            />
+          );
+        })}
       </Content>
     </TokensPageContainer>
   );
