@@ -7,7 +7,7 @@ import {
 import { u64 } from "@solana/spl-token";
 import type { TokenInfo, TokenListContainer } from "@solana/spl-token-registry";
 import { TokenListProvider } from "@solana/spl-token-registry";
-import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import type { TokenAccountLayoutDecoded } from "@typings/api";
 import {
   action,
@@ -16,13 +16,15 @@ import {
   observable,
   runInAction,
 } from "mobx";
+import { singleton } from "tsyringe";
 
+import { Settings } from "../api/settings";
 import { MAX_DECIMALS } from "../constants";
 
-type PrivateObservables = "_solBalance";
+type PrivateObservables = "_solBalance" | "getSolBalance" | "getSplTokens";
 
+@singleton()
 export class WalletStore {
-  private _connection: Connection;
   private _solBalance = 0;
   private _tokenListContainer: TokenListContainer | null = null;
 
@@ -31,10 +33,7 @@ export class WalletStore {
   public splTokens: Token[] = [];
   public amountMap: Map<string, TokenAmount> = new Map();
 
-  constructor() {
-    // @TODO Should be in the base class
-    this._connection = new Connection(process.env.RPC_NODE);
-
+  constructor(private _settings: Settings) {
     makeObservable<WalletStore, PrivateObservables>(this, {
       _solBalance: observable,
       splTokens: observable,
@@ -54,8 +53,13 @@ export class WalletStore {
     return this.solLoading || this.splLoading;
   }
 
-  public async getSolBalance(publicKey: PublicKey) {
-    const balance = await this._connection.getBalance(publicKey);
+  public loadWallet(publicKey: PublicKey) {
+    void this.getSplTokens(publicKey);
+    void this.getSolBalance(publicKey);
+  }
+
+  private async getSolBalance(publicKey: PublicKey) {
+    const balance = await this._settings.connection.getBalance(publicKey);
 
     runInAction(() => {
       this._solBalance = balance;
@@ -63,14 +67,11 @@ export class WalletStore {
     });
   }
 
-  public async getSplTokens(publicKey: PublicKey) {
-    // @TODO refactor to the api package
-    const tokenAccounts = await this._connection.getTokenAccountsByOwner(
-      publicKey,
-      {
+  private async getSplTokens(publicKey: PublicKey) {
+    const tokenAccounts =
+      await this._settings.connection.getTokenAccountsByOwner(publicKey, {
         programId: TOKEN_PROGRAM_ID,
-      }
-    );
+      });
 
     const walletAccounts: TokenAccountLayoutDecoded[] = tokenAccounts.value.map(
       (tokenAccount) => TokenAccountLayout.decode(tokenAccount.account.data)
@@ -90,7 +91,6 @@ export class WalletStore {
         const walletToken = new Token({ ...walletAccount, ...token });
         result.push(walletToken);
 
-        // @TODO take a look https://github.com/saber-hq/saber-common/blob/master/packages/token-utils/src/layout.ts#L85
         this.amountMap.set(
           walletToken.symbol,
           new TokenAmount(walletToken, u64.fromBuffer(walletAccount.amount))
@@ -113,5 +113,3 @@ export class WalletStore {
     return this._tokenListContainer.getList();
   }
 }
-
-export default new WalletStore();

@@ -2,8 +2,7 @@ import type { FC } from "react";
 import React from "react";
 
 import { TokenLogo } from "@components/TokenLogo";
-import type { Token } from "@saberhq/token-utils";
-import walletStore from "@stores/walletStore";
+import type { Token, TokenAmount } from "@saberhq/token-utils";
 import styled from "styled-components";
 
 import { MAX_DECIMALS } from "../constants";
@@ -28,16 +27,19 @@ const TokenUnits = styled.div`
   }
 `;
 
-export const TokenRow: FC<{ token: Token }> = (props) => {
-  const amount = walletStore.amountMap.get(props.token.symbol);
+type Props = {
+  token: Token;
+  amount?: TokenAmount;
+};
 
+export const TokenRow: FC<Props> = (props) => {
   return (
     <RowContainer>
       <TokenLogo src={props.token.icon} />
       <span>{props.token.symbol}</span>
       <span>{props.token.name}</span>
       <TokenUnits>
-        <span>{amount?.toFixed(MAX_DECIMALS)}</span>
+        <span>{props.amount?.toFixed(MAX_DECIMALS)}</span>
         <span>{props.token.symbol}</span>
       </TokenUnits>
     </RowContainer>

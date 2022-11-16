@@ -1,12 +1,13 @@
 import type { FC } from "react";
 import React from "react";
 
-import walletStore from "@stores/walletStore";
+import type { WalletStore } from "@stores/walletStore";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 type Props = {
   amount: string;
+  store: WalletStore;
 };
 
 export const PlateWrapper = styled.div`
@@ -29,7 +30,7 @@ export const SolAmount: FC<Props> = observer((props) => {
   return (
     <PlateWrapper>
       <span>You have got</span>
-      {walletStore.solLoading ? "..." : <span>{props.amount} SOL</span>}
+      {props.store.solLoading ? "..." : <span>{props.amount} SOL</span>}
     </PlateWrapper>
   );
 });

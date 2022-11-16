@@ -6,9 +6,10 @@ import NumberSplTokens from "@components/NumberSplTokens";
 import SolAmount from "@components/SolAmount";
 import TokenRow from "@components/TokenRow";
 import { useWallet } from "@solana/wallet-adapter-react";
-import walletStore from "@stores/walletStore";
+import { WalletStore } from "@stores/walletStore";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import { container } from "tsyringe";
 
 const TokensPageContainer = styled.div`
   align-items: self-start;
@@ -33,23 +34,29 @@ const Content = styled.div<{ isLoading: boolean }>`
 
 export const TokensPage: FC = observer(() => {
   const { publicKey } = useWallet();
+  const walletStore = container.resolve(WalletStore);
 
   useEffect(() => {
     if (publicKey) {
-      // @TODO add a single load method
-      void walletStore.getSolBalance(publicKey);
-      void walletStore.getSplTokens(publicKey);
+      walletStore.loadWallet(publicKey);
     }
   }, []);
 
   return (
     <TokensPageContainer>
-      <SolAmount amount={walletStore.sol} />
-      <NumberSplTokens number={walletStore.splTokens.length} />
+      <SolAmount amount={walletStore.sol} store={walletStore} />
+      <NumberSplTokens
+        number={walletStore.splTokens.length}
+        store={walletStore}
+      />
       <Content isLoading={walletStore.isLoading}>
         {walletStore.isLoading && <Loader />}
         {walletStore.splTokens.map((token) => (
-          <TokenRow token={token} key={token.symbol} />
+          <TokenRow
+            token={token}
+            key={token.symbol}
+            amount={walletStore.amountMap.get(token.symbol)}
+          />
         ))}
       </Content>
     </TokensPageContainer>
