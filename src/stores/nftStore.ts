@@ -11,19 +11,25 @@ export class NftStore {
   public nftList: NftInfoMap = new Map();
 
   constructor(private _nftService: NftService) {
-    makeObservable(this, {
+    makeObservable<NftStore, "getNfts">(this, {
       isLoading: observable,
       nftList: observable,
       getNfts: action,
     });
   }
 
-  public async getNfts(publicKey: PublicKey): Promise<void> {
+  private async getNfts(publicKey: PublicKey): Promise<void> {
     const nfts = await this._nftService.getUserNfts(publicKey);
 
     runInAction(() => {
       this.nftList = nfts;
       this.isLoading = false;
     });
+  }
+
+  public loadNfts(publicKey: PublicKey) {
+    if (!this.nftList.size) {
+      void this.getNfts(publicKey);
+    }
   }
 }

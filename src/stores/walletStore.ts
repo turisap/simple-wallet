@@ -54,8 +54,13 @@ export class WalletStore {
   }
 
   public loadWallet(publicKey: PublicKey) {
-    void this.getSplTokens(publicKey);
-    void this.getSolBalance(publicKey);
+    if (!this._solBalance) {
+      void this.getSolBalance(publicKey);
+    }
+
+    if (!this.splTokens.length) {
+      void this.getSplTokens(publicKey);
+    }
   }
 
   private async getSolBalance(publicKey: PublicKey) {

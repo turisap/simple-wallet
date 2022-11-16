@@ -52,7 +52,7 @@ export const TokenRow: FC<Props> = (props) => {
         <span>{props.amount?.toFixed(MAX_DECIMALS)}</span>
         <span>{props.token.symbol}</span>
       </TokenUnits>
-      <AmountUSD>{amountUSD?.toFixed(MAX_DECIMALS)} $</AmountUSD>
+      <AmountUSD>{amountUSD?.toFixed(MAX_DECIMALS)}$</AmountUSD>
     </RowContainer>
   );
 };

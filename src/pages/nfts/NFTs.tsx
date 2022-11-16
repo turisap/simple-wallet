@@ -50,7 +50,7 @@ export const NFTs: FC = observer(() => {
 
   useEffect(() => {
     if (publicKey) {
-      void store.getNfts(publicKey);
+      void store.loadNfts(publicKey);
     }
   }, []);
 
