@@ -1,14 +1,6 @@
-import {
-  Token,
-  TOKEN_PROGRAM_ID,
-  TokenAccountLayout,
-  TokenAmount,
-} from "@saberhq/token-utils";
-import { u64 } from "@solana/spl-token";
-import type { TokenInfo, TokenListContainer } from "@solana/spl-token-registry";
-import { TokenListProvider } from "@solana/spl-token-registry";
-import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import type { TokenAccountLayoutDecoded } from "@typings/api";
+import type { Token, TokenAmount } from "@saberhq/token-utils";
+import type { PublicKey } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
   action,
   computed,
@@ -16,33 +8,36 @@ import {
   observable,
   runInAction,
 } from "mobx";
+import { singleton } from "tsyringe";
 
+import { Settings } from "../api/settings";
+import { WalletService } from "../api/walletService";
 import { MAX_DECIMALS } from "../constants";
 
-type PrivateObservables = "_solBalance";
+type PrivateObservables = "_solBalance" | "getSolBalance" | "getSplTokens";
 
+@singleton()
 export class WalletStore {
-  private _connection: Connection;
   private _solBalance = 0;
-  private _tokenListContainer: TokenListContainer | null = null;
 
   public solLoading = true;
   public splLoading = true;
-  public splTokens: Token[] = [];
   public amountMap: Map<string, TokenAmount> = new Map();
+  public splTokens: Token[] = [];
 
-  constructor() {
-    // @TODO Should be in the base class
-    this._connection = new Connection(process.env.RPC_NODE);
-
+  constructor(
+    private _settings: Settings,
+    private _walletService: WalletService
+  ) {
     makeObservable<WalletStore, PrivateObservables>(this, {
       _solBalance: observable,
-      splTokens: observable,
+      amountMap: observable,
       splLoading: observable,
       solLoading: observable,
       getSolBalance: action,
       getSplTokens: action,
       isLoading: computed,
+      rates: computed,
     });
   }
 
@@ -54,8 +49,22 @@ export class WalletStore {
     return this.solLoading || this.splLoading;
   }
 
-  public async getSolBalance(publicKey: PublicKey) {
-    const balance = await this._connection.getBalance(publicKey);
+  get rates() {
+    return this._walletService.rates;
+  }
+
+  public loadWallet(publicKey: PublicKey) {
+    if (!this._solBalance) {
+      void this.getSolBalance(publicKey);
+    }
+
+    if (!this.splTokens.length) {
+      void this.getSplTokens(publicKey);
+    }
+  }
+
+  private async getSolBalance(publicKey: PublicKey) {
+    const balance = await this._settings.connection.getBalance(publicKey);
 
     runInAction(() => {
       this._solBalance = balance;
@@ -63,55 +72,14 @@ export class WalletStore {
     });
   }
 
-  public async getSplTokens(publicKey: PublicKey) {
-    // @TODO refactor to the api package
-    const tokenAccounts = await this._connection.getTokenAccountsByOwner(
-      publicKey,
-      {
-        programId: TOKEN_PROGRAM_ID,
-      }
-    );
-
-    const walletAccounts: TokenAccountLayoutDecoded[] = tokenAccounts.value.map(
-      (tokenAccount) => TokenAccountLayout.decode(tokenAccount.account.data)
-    );
-
-    const splTokenList = await this.getTokenList();
-    const result: Token[] = [];
-
-    for (const walletAccount of walletAccounts) {
-      const token = splTokenList.find((splToken) => {
-        return (
-          splToken.address === new PublicKey(walletAccount.mint).toString()
-        );
-      });
-
-      if (token) {
-        const walletToken = new Token({ ...walletAccount, ...token });
-        result.push(walletToken);
-
-        // @TODO take a look https://github.com/saber-hq/saber-common/blob/master/packages/token-utils/src/layout.ts#L85
-        this.amountMap.set(
-          walletToken.symbol,
-          new TokenAmount(walletToken, u64.fromBuffer(walletAccount.amount))
-        );
-      }
-    }
+  private async getSplTokens(publicKey: PublicKey) {
+    const result = await this._walletService.getSplTokens(publicKey);
+    const [amountMap, tokens] = result;
 
     runInAction(() => {
-      this.splTokens = result.sort();
-
+      this.amountMap = amountMap;
+      this.splTokens = tokens;
       this.splLoading = false;
     });
   }
-
-  private async getTokenList(): Promise<TokenInfo[]> {
-    if (!this._tokenListContainer) {
-      this._tokenListContainer = await new TokenListProvider().resolve();
-    }
-
-    return this._tokenListContainer.getList();
-  }
 }
-
-export default new WalletStore();

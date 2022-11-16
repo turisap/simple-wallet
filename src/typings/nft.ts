@@ -1,49 +1,41 @@
-import "reflect-metadata";
-
 import type { Metadata } from "@utils/nfts";
-import { Type } from "class-transformer";
 
-export class NftInfo {
-  public name?: string;
-  public symbol?: string;
-  public description?: string;
-  public seller_fee_basis_points?: number;
-  public image?: string;
-  public external_url?: string;
-  @Type(() => Attributes)
-  public attributes?: Attributes[];
-  @Type(() => Collection)
-  public collection?: Collection;
-  @Type(() => Properties)
-  public properties?: Properties;
+export interface NftInfo {
+  name: string;
+  symbol: string;
+  description: string;
+  seller_fee_basis_points: number;
+  image: string;
+  external_url: string;
+  attributes: Attribute[];
+  collection: Collection;
+  properties: Properties;
 }
 
-export class Collection {
-  public name?: string;
-  public family?: string;
+export interface Attribute {
+  trait_type: string;
+  value: string;
 }
 
-export class Properties {
-  @Type(() => Files)
-  public files?: Files[];
-  public category?: string;
-  @Type(() => Creators)
-  public creators?: Creators[];
+export interface Collection {
+  name: string;
+  family: string;
 }
 
-export class Files {
-  public uri?: string;
-  public type?: string;
+export interface Properties {
+  files: File[];
+  category: string;
+  creators: Creator[];
 }
 
-export class Creators {
-  public address?: string;
-  public share?: number;
+export interface Creator {
+  address: string;
+  share: number;
 }
 
-export class Attributes {
-  public trait_type?: string;
-  public value?: string;
+export interface File {
+  uri: string;
+  type: string;
 }
 
 export type NftInfoMap = Map<Metadata, NftInfo | null>;

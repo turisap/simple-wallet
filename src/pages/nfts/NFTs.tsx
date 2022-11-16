@@ -38,7 +38,10 @@ const NftPreview = styled.img`
 
 const NftName = styled.div`
   color: ${(props) => props.theme.text.plate};
+  overflow: hidden;
   padding: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const NFTs: FC = observer(() => {
@@ -47,7 +50,7 @@ export const NFTs: FC = observer(() => {
 
   useEffect(() => {
     if (publicKey) {
-      void store.getNfts(publicKey);
+      void store.loadNfts(publicKey);
     }
   }, []);
 

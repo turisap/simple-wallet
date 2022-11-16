@@ -90,12 +90,12 @@ export class NftService {
 
     const nftInfo: PromiseSettledResult<NftInfo | null>[] =
       await Promise.allSettled(
-        nftsInfoResp.map((infoResp) => {
+        nftsInfoResp.map(async (infoResp) => {
           if (infoResp.status === "rejected") {
             return null;
           }
 
-          return infoResp.value.json() as NftInfo;
+          return (await infoResp.value.json()) as NftInfo;
         })
       );
 
