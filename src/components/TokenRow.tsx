@@ -3,6 +3,7 @@ import React from "react";
 
 import { TokenLogo } from "@components/TokenLogo";
 import type { Token, TokenAmount } from "@saberhq/token-utils";
+import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 import { MAX_DECIMALS } from "../constants";
@@ -37,7 +38,7 @@ type Props = {
   amountUsd?: string;
 };
 
-export const TokenRow: FC<Props> = (props) => {
+export const TokenRow: FC<Props> = observer((props) => {
   return (
     <RowContainer>
       <TokenLogo src={props.token.icon} />
@@ -50,6 +51,6 @@ export const TokenRow: FC<Props> = (props) => {
       <AmountUSD>~{props.amountUsd}$</AmountUSD>
     </RowContainer>
   );
-};
+});
 
 export default TokenRow;

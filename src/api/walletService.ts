@@ -98,7 +98,7 @@ export class WalletService {
       const coinGeckoId = curr.info.extensions?.coingeckoId;
 
       if (coinGeckoId) {
-        `${acc},${coinGeckoId}`;
+        return `${acc},${coinGeckoId}`;
       }
 
       return acc;
