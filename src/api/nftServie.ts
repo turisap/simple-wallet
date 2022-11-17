@@ -1,7 +1,7 @@
 import { TOKEN_PROGRAM_ID } from "@saberhq/token-utils";
 import type { AccountInfo } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
-import type { NftInfo, NftInfoMap } from "@typings/nft";
+import type { NftInfo, NftInfoMap, ParsedNftData } from "@typings/nft";
 import { filterFulfilled } from "@utils/general";
 import { Metadata, METADATA_SCHEMA } from "@utils/nfts";
 import { deserializeUnchecked } from "borsh";
@@ -44,15 +44,16 @@ export class NftService {
 
     const nftAccounts = splAccounts
       .filter((acc) => {
-        const amount = acc.account?.data?.parsed?.info?.tokenAmount
-          ?.uiAmount as number;
-        const decimals = acc.account?.data?.parsed?.info?.tokenAmount
-          ?.decimals as number;
+        const parsedNftData = acc.account?.data?.parsed as ParsedNftData;
+
+        const amount = parsedNftData?.info?.tokenAmount?.uiAmount;
+        const decimals = parsedNftData?.info?.tokenAmount?.decimals;
 
         return decimals === 0 && amount >= 1;
       })
       .map((acc) => {
-        const address = acc.account?.data?.parsed?.info?.mint as string;
+        const parsedNftData = acc.account?.data?.parsed as ParsedNftData;
+        const address = parsedNftData?.info?.mint;
 
         return new PublicKey(address);
       });
