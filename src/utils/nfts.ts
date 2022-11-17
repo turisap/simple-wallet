@@ -76,6 +76,7 @@ export class Data {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const METADATA_SCHEMA = new Map<Function, unknown>([
   [
     Data,

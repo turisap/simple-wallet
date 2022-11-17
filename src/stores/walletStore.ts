@@ -1,6 +1,7 @@
 import type { Token, TokenAmount } from "@saberhq/token-utils";
 import type { PublicKey } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import type { RateMap } from "@typings/general";
 import type { CoinGeckoRate } from "@typings/wallet";
 import {
   action,
@@ -42,19 +43,19 @@ export class WalletStore {
     });
   }
 
-  get sol() {
+  get sol(): string {
     return (this._solBalance / LAMPORTS_PER_SOL).toFixed(MAX_DECIMALS);
   }
 
-  get isLoading() {
+  get isLoading(): boolean {
     return this.solLoading || this.splLoading;
   }
 
-  get rates() {
+  get rates(): RateMap {
     return this._walletService.rates;
   }
 
-  public loadWallet(publicKey: PublicKey) {
+  public loadWallet(publicKey: PublicKey): void {
     if (!this._solBalance) {
       void this.getSolBalance(publicKey);
     }

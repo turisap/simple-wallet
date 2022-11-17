@@ -9,6 +9,7 @@ import { u64 } from "@solana/spl-token";
 import type { TokenInfo } from "@solana/spl-token-registry";
 import { PublicKey } from "@solana/web3.js";
 import type { TokenAccountLayoutDecoded } from "@typings/api";
+import type { RateMap } from "@typings/general";
 import type { CoinGeckoRate } from "@typings/wallet";
 import { singleton } from "tsyringe";
 
@@ -20,7 +21,7 @@ type AmountMap = Map<string, TokenAmount>;
 @singleton()
 export class WalletService {
   private _tokenListContainer: TokenList | null = null;
-  public rates: Map<string, CoinGeckoRate> = new Map();
+  public rates: RateMap = new Map();
 
   constructor(
     private _remoteConfig: RemoteConfigService,
@@ -93,10 +94,15 @@ export class WalletService {
     );
     const url = new URL(ratesEndpointValue.asString());
     const searchParams = new URLSearchParams();
-    const symbols = tokens.reduce(
-      (acc, curr) => `${acc},${curr.info.extensions?.coingeckoId}`,
-      ""
-    );
+    const symbols = tokens.reduce<string>((acc, curr) => {
+      const coinGeckoId = curr.info.extensions?.coingeckoId;
+
+      if (coinGeckoId) {
+        `${acc},${coinGeckoId}`;
+      }
+
+      return acc;
+    }, "");
 
     searchParams.set("vs_currency", "USD");
     searchParams.set("ids", symbols);

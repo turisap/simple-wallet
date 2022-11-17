@@ -15,7 +15,9 @@ import { Settings } from "./settings";
 export class NftService {
   constructor(private _settings: Settings) {}
 
-  private getSolanaMetadataAddress = async (tokenMint: PublicKey) => {
+  private getSolanaMetadataAddress = async (
+    tokenMint: PublicKey
+  ): Promise<PublicKey> => {
     const metaProgamPublicKey = new PublicKey(METADATA_PROGRAM);
     const metaProgamPrefixBuffer = new TextEncoder().encode(METADATA_PREFIX);
     const metaProgamPublicKeyBuffer = metaProgamPublicKey.toBuffer();
@@ -41,16 +43,16 @@ export class NftService {
       });
 
     const nftAccounts = splAccounts
-      .filter((t) => {
-        const amount = t.account?.data?.parsed?.info?.tokenAmount
+      .filter((acc) => {
+        const amount = acc.account?.data?.parsed?.info?.tokenAmount
           ?.uiAmount as number;
-        const decimals = t.account?.data?.parsed?.info?.tokenAmount
+        const decimals = acc.account?.data?.parsed?.info?.tokenAmount
           ?.decimals as number;
 
         return decimals === 0 && amount >= 1;
       })
-      .map((t) => {
-        const address = t.account?.data?.parsed?.info?.mint as string;
+      .map((acc) => {
+        const address = acc.account?.data?.parsed?.info?.mint as string;
 
         return new PublicKey(address);
       });

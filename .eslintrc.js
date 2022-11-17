@@ -9,6 +9,13 @@ module.exports = {
   },
   overrides: [
     {
+      files: ["*.ts"],
+      excludedFiles: "*.tsx",
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": "error",
+      },
+    },
+    {
       files: ["**/*.ts", "**/*.tsx"],
       plugins: ["@typescript-eslint"],
       extends: [
@@ -161,6 +168,7 @@ module.exports = {
       },
     },
   ],
+
   rules: {
     curly: "error",
     eqeqeq: "error",
