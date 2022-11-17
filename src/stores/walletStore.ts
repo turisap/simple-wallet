@@ -65,7 +65,8 @@ export class WalletStore {
   }
 
   private async getSolBalance(publicKey: PublicKey): Promise<void> {
-    const balance = await this._settings.connection.getBalance(publicKey);
+    const connection = await this._settings.getConnection();
+    const balance = await connection.getBalance(publicKey);
 
     runInAction(() => {
       this._solBalance = balance;

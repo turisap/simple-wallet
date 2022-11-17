@@ -33,9 +33,8 @@ const NFTsPage = () => (
   </Suspense>
 );
 
-// @TODO add loglevel
+// @TODO function return type
 // @TODO save favourite addresses to PDA
-// @TODO add firebase remote config
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
 
