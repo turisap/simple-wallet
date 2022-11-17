@@ -9,10 +9,11 @@ import { u64 } from "@solana/spl-token";
 import type { TokenInfo } from "@solana/spl-token-registry";
 import { PublicKey } from "@solana/web3.js";
 import type { TokenAccountLayoutDecoded } from "@typings/api";
+import type { RateMap } from "@typings/general";
 import type { CoinGeckoRate } from "@typings/wallet";
-import * as process from "process";
 import { singleton } from "tsyringe";
 
+import { RemoteConfigService } from "./remoteConfigService";
 import { Settings } from "./settings";
 
 type AmountMap = Map<string, TokenAmount>;
@@ -20,17 +21,20 @@ type AmountMap = Map<string, TokenAmount>;
 @singleton()
 export class WalletService {
   private _tokenListContainer: TokenList | null = null;
-  public rates: Map<string, CoinGeckoRate> = new Map();
+  public rates: RateMap = new Map();
 
-  constructor(private _settings: Settings) {}
+  constructor(
+    private _remoteConfig: RemoteConfigService,
+    private _settings: Settings
+  ) {}
 
   public async getSplTokens(
     publicKey: PublicKey
   ): Promise<[AmountMap, Token[]]> {
-    const tokenAccounts =
-      await this._settings.connection.getTokenAccountsByOwner(publicKey, {
-        programId: TOKEN_PROGRAM_ID,
-      });
+    const connection = await this._settings.getConnection();
+    const tokenAccounts = await connection.getTokenAccountsByOwner(publicKey, {
+      programId: TOKEN_PROGRAM_ID,
+    });
 
     const walletAccounts: TokenAccountLayoutDecoded[] = tokenAccounts.value.map(
       (tokenAccount) => TokenAccountLayout.decode(tokenAccount.account.data)
@@ -70,7 +74,10 @@ export class WalletService {
 
   private async getTokenList(): Promise<TokenInfo[]> {
     if (!this._tokenListContainer) {
-      const resp = await fetch(process.env.TOKEN_LIST_ENDPOINT);
+      const listEndpointValue = await this._remoteConfig.getKey(
+        "TOKEN_LIST_ENDPOINT"
+      );
+      const resp = await fetch(listEndpointValue.asString());
       this._tokenListContainer = (await resp.json()) as TokenList;
     }
 
@@ -82,12 +89,20 @@ export class WalletService {
       return this.rates;
     }
 
-    const url = new URL(process.env.RATES_ENDPOINT);
-    const searchParams = new URLSearchParams();
-    const symbols = tokens.reduce(
-      (acc, curr) => `${acc},${curr.info.extensions?.coingeckoId}`,
-      ""
+    const ratesEndpointValue = await this._remoteConfig.getKey(
+      "RATES_ENDPOINT"
     );
+    const url = new URL(ratesEndpointValue.asString());
+    const searchParams = new URLSearchParams();
+    const symbols = tokens.reduce<string>((acc, curr) => {
+      const coinGeckoId = curr.info.extensions?.coingeckoId;
+
+      if (coinGeckoId) {
+        return `${acc},${coinGeckoId}`;
+      }
+
+      return acc;
+    }, "");
 
     searchParams.set("vs_currency", "USD");
     searchParams.set("ids", symbols);

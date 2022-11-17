@@ -1,7 +1,7 @@
 import { TOKEN_PROGRAM_ID } from "@saberhq/token-utils";
 import type { AccountInfo } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
-import type { NftInfo, NftInfoMap } from "@typings/nft";
+import type { NftInfo, NftInfoMap, ParsedNftData } from "@typings/nft";
 import { filterFulfilled } from "@utils/general";
 import { Metadata, METADATA_SCHEMA } from "@utils/nfts";
 import { deserializeUnchecked } from "borsh";
@@ -15,7 +15,9 @@ import { Settings } from "./settings";
 export class NftService {
   constructor(private _settings: Settings) {}
 
-  private getSolanaMetadataAddress = async (tokenMint: PublicKey) => {
+  private getSolanaMetadataAddress = async (
+    tokenMint: PublicKey
+  ): Promise<PublicKey> => {
     const metaProgamPublicKey = new PublicKey(METADATA_PROGRAM);
     const metaProgamPrefixBuffer = new TextEncoder().encode(METADATA_PREFIX);
     const metaProgamPublicKeyBuffer = metaProgamPublicKey.toBuffer();
@@ -33,22 +35,25 @@ export class NftService {
   };
 
   public async getUserNfts(publicKey: PublicKey): Promise<NftInfoMap> {
+    const connection = await this._settings.getConnection();
+
     const { value: splAccounts } =
-      await this._settings.connection.getParsedTokenAccountsByOwner(publicKey, {
+      await connection.getParsedTokenAccountsByOwner(publicKey, {
         programId: TOKEN_PROGRAM_ID,
       });
 
     const nftAccounts = splAccounts
-      .filter((t) => {
-        const amount = t.account?.data?.parsed?.info?.tokenAmount
-          ?.uiAmount as number;
-        const decimals = t.account?.data?.parsed?.info?.tokenAmount
-          ?.decimals as number;
+      .filter((acc) => {
+        const parsedNftData = acc.account?.data?.parsed as ParsedNftData;
+
+        const amount = parsedNftData?.info?.tokenAmount?.uiAmount;
+        const decimals = parsedNftData?.info?.tokenAmount?.decimals;
 
         return decimals === 0 && amount >= 1;
       })
-      .map((t) => {
-        const address = t.account?.data?.parsed?.info?.mint as string;
+      .map((acc) => {
+        const parsedNftData = acc.account?.data?.parsed as ParsedNftData;
+        const address = parsedNftData?.info?.mint;
 
         return new PublicKey(address);
       });
@@ -66,9 +71,7 @@ export class NftService {
     }
 
     const metadataData: (AccountInfo<Buffer> | null)[] =
-      await this._settings.connection.getMultipleAccountsInfo(
-        metadataPDAaccounts
-      );
+      await connection.getMultipleAccountsInfo(metadataPDAaccounts);
 
     const nftsData = metadataData
       .map((accountInfo) => {

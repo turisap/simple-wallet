@@ -9,6 +9,13 @@ module.exports = {
   },
   overrides: [
     {
+      files: ["*.ts"],
+      excludedFiles: "*.tsx",
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": "error",
+      },
+    },
+    {
       files: ["**/*.ts", "**/*.tsx"],
       plugins: ["@typescript-eslint"],
       extends: [
@@ -107,9 +114,9 @@ module.exports = {
           },
         ],
         "@typescript-eslint/ban-ts-comment": "error",
-        "@typescript-eslint/no-unsafe-argument": "warn",
-        "@typescript-eslint/no-unsafe-assignment": "warn",
-        "@typescript-eslint/no-unsafe-member-access": "warn",
+        "@typescript-eslint/no-unsafe-argument": "error",
+        "@typescript-eslint/no-unsafe-assignment": "error",
+        "@typescript-eslint/no-unsafe-member-access": "error",
         "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unsafe-return": "warn",
         "@typescript-eslint/no-misused-promises": "warn",
@@ -161,6 +168,7 @@ module.exports = {
       },
     },
   ],
+
   rules: {
     curly: "error",
     eqeqeq: "error",
@@ -192,7 +200,7 @@ module.exports = {
     "turisap/no-magic-numbers": [
       "error",
       {
-        ignore: [-1, 0, 1, 10],
+        ignore: [-1, 0, 1, 2, 10],
         ignoreEnums: true,
         ignoreNumericLiteralTypes: true,
         ignoreArrayIndexes: true,

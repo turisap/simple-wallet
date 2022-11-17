@@ -27,7 +27,7 @@ export class NftStore {
     });
   }
 
-  public loadNfts(publicKey: PublicKey) {
+  public loadNfts(publicKey: PublicKey): void {
     if (!this.nftList.size) {
       void this.getNfts(publicKey);
     }

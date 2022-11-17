@@ -15,7 +15,7 @@ a {
 
 #root {
   align-items: center;
-  background: ${(props) => props.theme.backgrounds.page};
+  background: ${(props): string => props.theme.backgrounds.page as string};
   display: flex;
   flex-direction: column;
   height: 100%;

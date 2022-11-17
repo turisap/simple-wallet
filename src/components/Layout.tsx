@@ -43,7 +43,7 @@ const NavigationButton = styled.span<{ isActive: boolean }>`
   ${(props) =>
     props.isActive
       ? gradient
-      : `background: ${props.theme.backgrounds.button}`};
+      : `background: ${props.theme.backgrounds.button as string}`};
   border-radius: 16px;
   color: ${(props) => props.theme.text.button};
   display: flex;

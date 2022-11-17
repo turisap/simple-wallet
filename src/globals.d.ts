@@ -1,8 +1,10 @@
+declare const __DEVELOPMENT__: boolean;
+declare const __PRODUCTION__: boolean;
+
 declare namespace NodeJS {
   interface ProcessEnv {
-    RPC_NODE: string;
-    RATES_ENDPOINT: string;
-    TOKEN_LIST_ENDPOINT: string;
+    REMOTE_CONFIG_API_KEY: string;
+    REMOTE_CONFIG_APP_ID: string;
   }
 }
 

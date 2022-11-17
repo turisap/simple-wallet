@@ -38,4 +38,24 @@ export interface File {
   type: string;
 }
 
+export interface ParsedNftData {
+  info: Info;
+  type: string;
+}
+
+export interface Info {
+  isNative: boolean;
+  mint: string;
+  owner: string;
+  state: string;
+  tokenAmount: TokenAmount;
+}
+
+export interface TokenAmount {
+  amount: string;
+  decimals: number;
+  uiAmount: number;
+  uiAmountString: string;
+}
+
 export type NftInfoMap = Map<Metadata, NftInfo | null>;
