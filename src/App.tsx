@@ -43,7 +43,7 @@ const ExperimentsPage = () => (
 // @TODO function return type
 // @TODO save favourite addresses to PDA
 function App() {
-  const network = WalletAdapterNetwork.Mainnet;
+  const network = WalletAdapterNetwork.Devnet;
 
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
