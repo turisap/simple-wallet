@@ -6,6 +6,7 @@ import DotenvWebpackPlugin from "dotenv-webpack";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { DuplicatesPlugin } from "inspectpack/plugin";
+import type { LogLevelDesc } from "loglevel";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
 import path from "path";
@@ -33,6 +34,7 @@ interface Configuration
 type CustomEnv = {
   testing: boolean;
   analise: boolean;
+  loglevel: LogLevelDesc;
 };
 
 type ArgV = {
@@ -44,6 +46,7 @@ type ConfigFn = (env: CustomEnv, argv: ArgV) => Configuration;
 const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
   const __DEVELOPMENT__ = argv.mode === "development";
   const __PRODUCTION__ = argv.mode === "production";
+  const __LOGLEVEL__ = env.loglevel;
   const __ANALISE__ = env.analise;
 
   process.env.NODE_ENV = argv.mode;
@@ -207,6 +210,7 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         __DEVELOPMENT__: JSON.stringify(__DEVELOPMENT__),
         __PRODUCTION__: JSON.stringify(__PRODUCTION__),
         __APP_TITLE__: JSON.stringify(__APP_TITLE__),
+        __LOGLEVEL__: JSON.stringify(__LOGLEVEL__),
       }),
 
       new HtmlWebpackPlugin({

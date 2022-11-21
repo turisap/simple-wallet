@@ -8,6 +8,7 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { Button } from "@styled/layout";
+import { logger } from "@utils/logger";
 import styled from "styled-components";
 
 const ExperimentsPageContainer = styled.div`
@@ -57,8 +58,7 @@ export const Experiments: FC = () => {
     transaction.add(instruction);
 
     await sendTransaction(transaction, connection).then((sig) => {
-      // eslint-disable-next-line no-console
-      console.log(
+      logger.info(
         `You can view your transaction on the Solana Explorer at:\nhttps://explorer.solana.com/tx/${sig}?cluster=devnet`
       );
     });
@@ -67,7 +67,13 @@ export const Experiments: FC = () => {
   return (
     <ExperimentsPageContainer>
       <Heading>Experiments</Heading>
-      <Button onClick={pingProgram}>Ping On-chain Program</Button>
+      <Button
+        onClick={() => {
+          void pingProgram();
+        }}
+      >
+        Ping On-chain Program
+      </Button>
     </ExperimentsPageContainer>
   );
 };
