@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { LayoutComponent } from "@components/Layout";
 import { Connect } from "@pages/connect/Connect";
+import Experiments from "@pages/experiments/Experiments";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
@@ -33,6 +34,12 @@ const NFTsPage = () => (
   </Suspense>
 );
 
+const ExperimentsPage = () => (
+  <Suspense fallback={<div>Page is Loading...</div>}>
+    <Experiments />
+  </Suspense>
+);
+
 // @TODO function return type
 // @TODO save favourite addresses to PDA
 function App() {
@@ -57,6 +64,10 @@ function App() {
                 <Route element={<LayoutComponent />}>
                   <Route path="wallet" element={<TokensPage />} />
                   <Route path="nfts" element={<NFTsPage />} />
+                  <Route
+                    path="chain-experiments"
+                    element={<ExperimentsPage />}
+                  />
                 </Route>
               </Routes>
             </BrowserRouter>

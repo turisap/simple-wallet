@@ -10,7 +10,7 @@ module.exports = {
   overrides: [
     {
       files: ["*.ts"],
-      excludedFiles: "*.tsx",
+      excludedFiles: ["*.tsx", "./src/styled/*"],
       rules: {
         "@typescript-eslint/explicit-function-return-type": "error",
       },

@@ -4,7 +4,8 @@ import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
-import styled, { css } from "styled-components";
+import { Button, hoverBackground, hoverGradient } from "@styled/layout";
+import styled from "styled-components";
 
 const LayoutContainer = styled.div`
   display: grid;
@@ -22,39 +23,15 @@ const NavigationBar = styled.div`
   justify-items: stretch;
 `;
 
-const gradient = css`
-  /* stylelint-disable */
-  background: repeating-linear-gradient(
-    45deg,
-    #121214,
-    #121214 1px,
-    #61e309 1px,
-    #61e309 30px
-  );
-  /* stylelint-enable */
-`;
-
-const hover = css`
-  background: ${(props) => props.theme.primary};
-`;
-
-const NavigationButton = styled.span<{ isActive: boolean }>`
-  align-items: center;
+const NavigationButton = styled(Button)<{ isActive: boolean }>`
+  width: 100%;
   ${(props) =>
     props.isActive
-      ? gradient
+      ? hoverGradient
       : `background: ${props.theme.backgrounds.button as string}`};
-  border-radius: 16px;
-  color: ${(props) => props.theme.text.button};
-  display: flex;
-  font-weight: 600;
-  height: 100%;
-  justify-content: center;
 
   &:hover {
-    ${(props) => (props.isActive ? gradient : hover)};
-    color: ${(props) => props.theme.text.buttonHover};
-    cursor: pointer;
+    ${(props) => (props.isActive ? hoverGradient : hoverBackground)};
   }
 `;
 
