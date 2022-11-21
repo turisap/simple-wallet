@@ -40,7 +40,6 @@ const ExperimentsPage = () => (
   </Suspense>
 );
 
-// @TODO function return type
 // @TODO save favourite addresses to PDA
 function App() {
   const network = WalletAdapterNetwork.Devnet;

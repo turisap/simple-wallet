@@ -8,6 +8,7 @@ export const theme: DefaultTheme = {
     page: rgb(18, 29, 51),
     button: "#000",
     plate: "#000",
+    input: "#000",
   },
   borders: {
     button: "#eee",
@@ -17,9 +18,11 @@ export const theme: DefaultTheme = {
     button: "#eee",
     buttonHover: "#000",
     plate: "#eee",
+    input: "#eee",
   },
   radius: {
     plate: "16px",
+    button: "16px",
   },
 };
 /* eslint-enable turisap/no-magic-numbers */

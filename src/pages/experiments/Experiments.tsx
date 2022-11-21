@@ -1,19 +1,17 @@
-import type { FC } from "react";
-import React from "react";
+import type { FC, MouseEvent } from "react";
+import React, { useState } from "react";
 
+import { Movie } from "@pages/experiments/actions/movieLayout";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import {
-  PublicKey,
-  Transaction,
-  TransactionInstruction,
-} from "@solana/web3.js";
 import { Button } from "@styled/layout";
-import { logger } from "@utils/logger";
 import styled from "styled-components";
+
+import { handleTransactionSubmit } from "./actions/movieReview";
 
 const ExperimentsPageContainer = styled.div`
   display: grid;
   grid-auto-rows: 48px;
+  grid-gap: 16px;
   grid-template-columns: 1fr 1fr;
 `;
 
@@ -23,57 +21,57 @@ const Heading = styled.h2`
   grid-column: 1 / -1;
 `;
 
-const PROGRAM_ADDRESS = "ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa";
-const PROGRAM_DATA_ADDRESS = "Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod";
+const Input = styled.input`
+  background: ${({ theme }) => theme.backgrounds.input};
+  border: none;
+  border-radius: ${({ theme }) => theme.radius.button};
+  color: ${({ theme }) => theme.text.input};
+  padding: 8px;
+`;
 
 // @TODO don't forget this is on the DEVNET
-
 export const Experiments: FC = () => {
+  const [title, setTitle] = useState<string>("");
+  const [rating, setRating] = useState<number>(0);
+  const [description, setDescription] = useState<string>("");
   const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
+  const { sendTransaction, connected, publicKey } = useWallet();
 
-  const pingProgram = async () => {
-    if (!connection || !publicKey) {
-      return;
+  const submitForm = (e: MouseEvent) => {
+    e.preventDefault();
+
+    if (!connected) {
+      throw new Error("Please connect your wallet");
     }
 
-    const recentBlockhash = await connection.getLatestBlockhash();
-    const programId = new PublicKey(PROGRAM_ADDRESS);
-    const programDataAccount = new PublicKey(PROGRAM_DATA_ADDRESS);
-    const transaction = new Transaction({
-      recentBlockhash: recentBlockhash.blockhash,
-    });
+    if (!publicKey) {
+      throw new Error("Please connect your wallet");
+    }
 
-    const instruction = new TransactionInstruction({
-      keys: [
-        {
-          pubkey: programDataAccount,
-          isSigner: false,
-          isWritable: true,
-        },
-      ],
-      programId,
-    });
+    const movie = new Movie(title, rating, description);
 
-    transaction.add(instruction);
-
-    await sendTransaction(transaction, connection).then((sig) => {
-      logger.info(
-        `You can view your transaction on the Solana Explorer at:\nhttps://explorer.solana.com/tx/${sig}?cluster=devnet`
-      );
-    });
+    void handleTransactionSubmit(movie, publicKey, sendTransaction, connection);
   };
 
   return (
     <ExperimentsPageContainer>
       <Heading>Experiments</Heading>
-      <Button
-        onClick={() => {
-          void pingProgram();
-        }}
-      >
-        Ping On-chain Program
-      </Button>
+      <Input
+        placeholder={"title"}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <Input
+        placeholder={"rating"}
+        value={rating}
+        onChange={(e) => setRating(parseInt(e.target.value))}
+      />
+      <Input
+        placeholder={"description"}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+      <Button onClick={submitForm}>Submit</Button>
     </ExperimentsPageContainer>
   );
 };

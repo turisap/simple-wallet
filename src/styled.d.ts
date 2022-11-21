@@ -1,6 +1,6 @@
 import "styled-components";
 
-type Tokens = "page" | "button" | "plate";
+type Tokens = "page" | "button" | "plate" | "input";
 
 type StyleSet = {
   [T in Tokens]?: string;

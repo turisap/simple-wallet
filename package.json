@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@nfteyez/sol-rayz": "^0.10.2",
+    "@project-serum/borsh": "^0.2.5",
     "@saberhq/token-utils": "^1.14.9",
     "@solana/spl-token-registry": "^0.2.4574",
     "@solana/wallet-adapter-base": "^0.9.18",
