@@ -1,12 +1,19 @@
 import type { FC, MouseEvent } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Movie } from "@pages/experiments/actions/movieLayout";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
 import { Button } from "@styled/layout";
+import { logger } from "@utils/logger";
+import * as base58 from "bs58";
 import styled from "styled-components";
 
-import { handleTransactionSubmit } from "./actions/movieReview";
+import { Movie } from "./actions/movieLayout";
+import {
+  handleTransactionSubmit,
+  MOVIE_REVIEW_PROGRAM_ID,
+} from "./actions/movieReview";
+import MovieCard from "./MovieCard";
 
 const ExperimentsPageContainer = styled.div`
   display: grid;
@@ -29,13 +36,49 @@ const Input = styled.input`
   padding: 8px;
 `;
 
-// @TODO don't forget this is on the DEVNET
 export const Experiments: FC = () => {
   const [title, setTitle] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [search, setSearch] = useState<string>("sol");
   const [description, setDescription] = useState<string>("");
   const { connection } = useConnection();
   const { sendTransaction, connected, publicKey } = useWallet();
+
+  useEffect(() => {
+    connection
+      .getProgramAccounts(new PublicKey(MOVIE_REVIEW_PROGRAM_ID), {
+        dataSlice: { offset: 2, length: 18 },
+        filters: [
+          {
+            memcmp: {
+              offset: 6,
+              bytes: base58.encode(Buffer.from(search)),
+            },
+          },
+        ],
+      })
+
+      .then((paginatedKeys) => {
+        const pageKeys = paginatedKeys.slice(0, 10);
+
+        return connection.getMultipleAccountsInfo(
+          pageKeys.map((k) => k.pubkey)
+        );
+      })
+      .then((accounts) => {
+        const movieAccounts = accounts
+          .map((acc) => {
+            return Movie.deserialize(acc?.data);
+          })
+          .filter(function (movie: Movie | null): movie is Movie {
+            return Boolean(movie);
+          });
+
+        setMovies(movieAccounts);
+      })
+      .catch(logger.error);
+  }, [search]);
 
   const submitForm = (e: MouseEvent) => {
     e.preventDefault();
@@ -72,6 +115,14 @@ export const Experiments: FC = () => {
         onChange={(e) => setDescription(e.target.value)}
       />
       <Button onClick={submitForm}>Submit</Button>
+      {movies.map((movie) => (
+        <MovieCard movie={movie} key={`${movie.serialize().toString()}`} />
+      ))}
+      <Input
+        placeholder={"search"}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
     </ExperimentsPageContainer>
   );
 };

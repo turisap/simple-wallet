@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import type { Layout } from "@project-serum/borsh";
-import { str, struct, u8 } from "@project-serum/borsh";
+import * as borsh from "@project-serum/borsh";
+import { logger } from "@utils/logger";
 
 const INITIAL_BUFFER_SIZE = 1000;
 
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 export class Movie {
   title: string;
   rating: number;
@@ -15,11 +16,18 @@ export class Movie {
     this.description = description;
   }
 
-  borshInstructionSchema: Layout<Movie> = struct([
-    u8("variant"),
-    str("title"),
-    u8("rating"),
-    str("description"),
+  borshInstructionSchema = borsh.struct([
+    borsh.u8("variant"),
+    borsh.str("title"),
+    borsh.u8("rating"),
+    borsh.str("description"),
+  ]) as Layout<Movie>;
+
+  static borshAccountSchema = borsh.struct([
+    borsh.bool("initialized"),
+    borsh.u8("rating"),
+    borsh.str("title"),
+    borsh.str("description"),
   ]) as Layout<Movie>;
 
   public serialize(): Buffer {
@@ -29,5 +37,23 @@ export class Movie {
 
     return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer));
   }
+
+  static deserialize(buffer?: Buffer): Movie | null {
+    if (!buffer) {
+      return null;
+    }
+
+    try {
+      const { title, rating, description } =
+        Movie.borshAccountSchema.decode(buffer);
+
+      return new Movie(title, rating, description);
+    } catch (error) {
+      logger.error("Deserialization error:", error);
+
+      return null;
+    }
+  }
 }
+
 /* eslint-enable @typescript-eslint/explicit-member-accessibility */
