@@ -1,9 +1,10 @@
 import type { FC, MouseEvent } from "react";
 import React, { useEffect, useState } from "react";
 
+import Loader from "@components/Loader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { AddressesStore } from "@stores/addressesStore";
-import { Button } from "@styled/layout";
+import { alignCenter, Button } from "@styled/layout";
 import { AddressLayout } from "@utils/addressLayout";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
@@ -13,9 +14,9 @@ import { MAX_ADDRESS_TITLE_LENGTH } from "../../constants";
 
 const AddressesContainer = styled.div`
   display: grid;
-  grid-auto-rows: 48px;
   grid-gap: 16px;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 20px 48px 48px;
 `;
 
 const Heading = styled.h2`
@@ -32,18 +33,21 @@ const Input = styled.input`
   padding: 8px;
 `;
 
-const AddressList = styled.div`
+const AddressList = styled.div<{ isLoading: boolean }>`
+  color: ${({ theme }) => theme.text.plate};
   display: grid;
+  flex-grow: ${(props) => (props.isLoading ? 1 : 0)};
   grid-auto-rows: 24px;
   grid-column: 1 / -1;
   grid-template-columns: 1fr;
-  margin-top: 20px;
+  margin-top: 50px;
+
+  ${(props) => (props.isLoading ? alignCenter : "")}
 `;
 
 const Address = styled.div`
   align-items: center;
   border-top: 1px dashed ${({ theme }) => theme.text.plate};
-  color: ${({ theme }) => theme.text.plate};
   display: grid;
   font-weight: 600;
   grid-gap: 8px;
@@ -79,31 +83,35 @@ export const Addresses: FC = observer(() => {
   // console.log(new Keypair().publicKey.toString());
 
   return (
-    <AddressesContainer>
-      <Heading>Addresses</Heading>
-      <Input
-        placeholder={"title"}
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        type={"text"}
-        maxLength={MAX_ADDRESS_TITLE_LENGTH}
-      />
-      <Input
-        placeholder={"address"}
-        value={addressHex}
-        onChange={(e) => setAddressHex(e.target.value)}
-        type={"text"}
-      />
-      <Button onClick={submitForm}>Submit</Button>
-      <AddressList>
+    <>
+      <AddressesContainer>
+        <Heading>Addresses</Heading>
+        <Input
+          placeholder={"title"}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          type={"text"}
+          maxLength={MAX_ADDRESS_TITLE_LENGTH}
+        />
+        <Input
+          placeholder={"address"}
+          value={addressHex}
+          onChange={(e) => setAddressHex(e.target.value)}
+          type={"text"}
+        />
+        <Button onClick={submitForm}>Submit</Button>
+      </AddressesContainer>
+      <AddressList isLoading={addressStore.isLoading}>
+        {!addressStore.isLoading && <span>Address list</span>}
+        {addressStore.isLoading && <Loader />}
         {addressStore.addressesList.map((address) => (
-          <Address>
+          <Address key={address.hex}>
             <span>{address.title}</span>
             <span>{address.hex}</span>
           </Address>
         ))}
       </AddressList>
-    </AddressesContainer>
+    </>
   );
 });
 

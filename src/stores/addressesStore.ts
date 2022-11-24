@@ -59,6 +59,7 @@ export class AddressesStore implements BaseStore {
 
     runInAction(() => {
       this.addressesList = addresses;
+      this.isLoading = false;
     });
   }
 }

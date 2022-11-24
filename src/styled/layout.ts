@@ -33,3 +33,10 @@ export const Button = styled.button`
     ${hoverBackground}
   }
 `;
+
+export const alignCenter = css`
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+`;
