@@ -1,3 +1,4 @@
 pub mod entrypoint;
-pub mod processor;
 pub mod instructions;
+pub mod processor;
+pub mod state;
