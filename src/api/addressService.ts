@@ -1,5 +1,4 @@
 import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
-import type { Connection } from "@solana/web3.js";
 import {
   PublicKey,
   SystemProgram,
@@ -23,10 +22,10 @@ export class AddressService {
   public async submitAddress(
     address: AddressLayout,
     publicKey: PublicKey,
-    sendTransaction: WalletAdapterProps["sendTransaction"],
-    connection: Connection
+    sendTransaction: WalletAdapterProps["sendTransaction"]
   ): Promise<boolean> {
     const buffer = address.serialize();
+    const connection = await this._settings.getConnection();
     const addressProgramId = await this._remoteConfig.getKey(
       "ADDRESS_PROGRAM_ID"
     );
@@ -64,9 +63,10 @@ export class AddressService {
 
     try {
       const txId = await sendTransaction(transaction, connection);
+      const cluster = await this._remoteConfig.getKey("CLUSTER");
 
       logger.info(
-        `Transaction submitted: https://explorer.solana.com/tx/${txId}?cluster=custom&customUrl=http%3A%2F%2Flocalhost%3A8899`
+        `Transaction submitted: https://explorer.solana.com/tx/${txId}?cluster=${cluster.asString()}&customUrl=http%3A%2F%2Flocalhost%3A8899`
       );
 
       return true;

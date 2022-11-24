@@ -1,5 +1,5 @@
 import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
-import type { Connection, PublicKey } from "@solana/web3.js";
+import type { PublicKey } from "@solana/web3.js";
 import type { AddressLayout } from "@utils/addressLayout";
 import { logger } from "@utils/logger";
 import { action, makeObservable, observable, runInAction } from "mobx";
@@ -28,16 +28,14 @@ export class AddressesStore {
   public async handleAddressSubmit(
     address: AddressLayout,
     publicKey: PublicKey,
-    sendTransaction: WalletAdapterProps["sendTransaction"],
-    connection: Connection
+    sendTransaction: WalletAdapterProps["sendTransaction"]
   ): Promise<boolean> {
     this.isLoading = true;
 
     const resp = await this._addressService.submitAddress(
       address,
       publicKey,
-      sendTransaction,
-      connection
+      sendTransaction
     );
 
     runInAction(() => {

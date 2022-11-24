@@ -1,7 +1,7 @@
 import type { FC, MouseEvent } from "react";
 import React, { useState } from "react";
 
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { AddressesStore } from "@stores/addressesStore";
 import { Button } from "@styled/layout";
 import { AddressLayout } from "@utils/addressLayout";
@@ -35,7 +35,6 @@ const Input = styled.input`
 export const Addresses: FC = observer(() => {
   const [title, setTitle] = useState<string>("");
   const [addressHex, setAddressHex] = useState<string>("");
-  const { connection } = useConnection();
   const { sendTransaction, connected, publicKey } = useWallet();
   const addressStore = container.resolve(AddressesStore);
 
@@ -52,12 +51,7 @@ export const Addresses: FC = observer(() => {
 
     const address = new AddressLayout(title, addressHex);
 
-    void addressStore.handleAddressSubmit(
-      address,
-      publicKey,
-      sendTransaction,
-      connection
-    );
+    void addressStore.handleAddressSubmit(address, publicKey, sendTransaction);
   };
 
   return (

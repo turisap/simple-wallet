@@ -60,8 +60,6 @@ export const Experiments: FC = () => {
       })
 
       .then((paginatedKeys) => {
-        console.log(paginatedKeys);
-
         return connection.getMultipleAccountsInfo(
           paginatedKeys.map((k) => k.pubkey)
         );

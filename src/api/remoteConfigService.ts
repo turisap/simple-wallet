@@ -21,7 +21,8 @@ type ConfigKeys =
   | "RPC_ENDPOINT"
   | "RATES_ENDPOINT"
   | "TOKEN_LIST_ENDPOINT"
-  | "ADDRESS_PROGRAM_ID";
+  | "ADDRESS_PROGRAM_ID"
+  | "CLUSTER";
 
 @singleton()
 export class RemoteConfigService {
