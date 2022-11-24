@@ -90,8 +90,6 @@ export const Addresses: FC = observer(() => {
     void addressStore.handleAddressSubmit(address, publicKey, sendTransaction);
   };
 
-  // console.log(new Keypair().publicKey.toString());
-
   return (
     <>
       <AddressesContainer>

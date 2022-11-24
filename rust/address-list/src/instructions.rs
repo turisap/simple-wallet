@@ -3,6 +3,7 @@ use solana_program::program_error::ProgramError;
 
 pub enum FavoriteAddressInstruction {
     AddFavoriteAddress { title: String, hex: String },
+    UpdateFavoriteAddress { title: String, hex: String },
 }
 
 #[derive(BorshDeserialize)]
@@ -20,6 +21,10 @@ impl FavoriteAddressInstruction {
 
         Ok(match variant {
             0 => Self::AddFavoriteAddress {
+                title: payload.title,
+                hex: payload.hex,
+            },
+            1 => Self::UpdateFavoriteAddress {
                 title: payload.title,
                 hex: payload.hex,
             },

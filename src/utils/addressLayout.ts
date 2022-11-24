@@ -29,7 +29,7 @@ export class AddressLayout {
   public serialize(): Buffer {
     const buffer = Buffer.alloc(INITIAL_BUFFER_SIZE);
 
-    this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
+    this.borshInstructionSchema.encode({ ...this, variant: 1 }, buffer);
 
     return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer));
   }

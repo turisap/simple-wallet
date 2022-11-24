@@ -9,6 +9,7 @@ use solana_program::{
     entrypoint::ProgramResult,
     msg,
     program::invoke_signed,
+    program_error::ProgramError,
     pubkey::Pubkey,
     system_instruction,
     sysvar::{rent::Rent, Sysvar},
@@ -27,6 +28,9 @@ pub fn process_instruction(
     match instruction {
         FavoriteAddressInstruction::AddFavoriteAddress { title, hex } => {
             add_favorite_address(program_id, accounts, title, hex);
+        }
+        FavoriteAddressInstruction::UpdateFavoriteAddress { title, hex } => {
+            update_favorite_address(program_id, accounts, title, hex);
         }
     }
     Ok(())
@@ -89,6 +93,53 @@ pub fn add_favorite_address(
     account_data.title = title;
     account_data.hex = hex;
     account_data.is_initialized = true;
+
+    msg!("serializing account");
+    account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
+    msg!("state account serialized");
+
+    Ok(())
+}
+
+fn update_favorite_address(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    title: String,
+    hex: String,
+) -> ProgramResult {
+    msg!("Updating movie review...");
+
+    let account_info_iter = &mut accounts.iter();
+
+    let initializer = next_account_info(account_info_iter)?;
+    let pda_account = next_account_info(account_info_iter)?;
+
+    if pda_account.owner != program_id {
+        return Err(ProgramError::IllegalOwner);
+    }
+
+    msg!("unpacking state account");
+    let mut account_data =
+        try_from_slice_unchecked::<AddressAccountState>(&pda_account.data.borrow()).unwrap();
+    msg!("review title: {}", account_data.title);
+
+    let (pda, _bump_seed) = Pubkey::find_program_address(
+        &[
+            initializer.key.as_ref(),
+            account_data.title.as_bytes().as_ref(),
+        ],
+        program_id,
+    );
+
+    msg!("Review before update:");
+    msg!("Title: {}", account_data.title);
+    msg!("Hex: {}", account_data.hex);
+
+    account_data.hex = hex;
+
+    msg!("Review after update:");
+    msg!("Title: {}", account_data.title);
+    msg!("Hex: {}", account_data.hex);
 
     msg!("serializing account");
     account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
