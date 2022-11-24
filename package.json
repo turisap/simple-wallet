@@ -39,7 +39,9 @@
     "serve": "webpack serve --mode development",
     "lint:style": "stylelint './src/**/*.(tsx|css)'",
     "lint:type": "tsc --noEmit --project ./tsconfig.json --emitDeclarationOnly false",
-    "lint:es": "eslint './src/**/*'"
+    "lint:es": "eslint './src/**/*'",
+    "logs": "solana logs",
+    "validator": "solana-test-validator"
   },
   "browserslist": {
     "production": [

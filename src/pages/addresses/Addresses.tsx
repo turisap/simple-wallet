@@ -13,7 +13,6 @@ import {
   handleTransactionSubmit,
   MOVIE_REVIEW_PROGRAM_ID,
 } from "./actions/movieReview";
-import MovieCard from "./MovieCard";
 
 const ExperimentsPageContainer = styled.div`
   display: grid;
@@ -36,7 +35,7 @@ const Input = styled.input`
   padding: 8px;
 `;
 
-export const Experiments: FC = () => {
+export const Addresses: FC = () => {
   const [title, setTitle] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -115,9 +114,6 @@ export const Experiments: FC = () => {
         onChange={(e) => setDescription(e.target.value)}
       />
       <Button onClick={submitForm}>Submit</Button>
-      {movies.map((movie) => (
-        <MovieCard movie={movie} key={`${movie.serialize().toString()}`} />
-      ))}
       <Input
         placeholder={"search"}
         value={search}
@@ -127,4 +123,4 @@ export const Experiments: FC = () => {
   );
 };
 
-export default Experiments;
+export default Addresses;

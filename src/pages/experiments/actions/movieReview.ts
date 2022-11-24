@@ -10,8 +10,12 @@ import { logger } from "@utils/logger";
 
 import type { Movie } from "./movieLayout";
 
+// @FIXME this is the original program id from the tutorial
+// export const MOVIE_REVIEW_PROGRAM_ID =
+//   "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN";
+
 export const MOVIE_REVIEW_PROGRAM_ID =
-  "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN";
+  "4nxUFajHdEJBJtnRx8joKZST6dTJDmtPec6dNrh8igcr";
 
 export const handleTransactionSubmit = async (
   movie: Movie,
