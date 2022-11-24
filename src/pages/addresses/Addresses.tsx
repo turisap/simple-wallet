@@ -1,5 +1,5 @@
 import type { FC, MouseEvent } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { AddressesStore } from "@stores/addressesStore";
@@ -32,11 +32,33 @@ const Input = styled.input`
   padding: 8px;
 `;
 
+const AddressList = styled.div`
+  display: grid;
+  grid-auto-rows: 24px;
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  margin-top: 20px;
+`;
+
+const Address = styled.div`
+  align-items: center;
+  border-top: 1px dashed ${({ theme }) => theme.text.plate};
+  color: ${({ theme }) => theme.text.plate};
+  display: grid;
+  font-weight: 600;
+  grid-gap: 8px;
+  grid-template-columns: 100px 1fr;
+`;
+
 export const Addresses: FC = observer(() => {
   const [title, setTitle] = useState<string>("");
   const [addressHex, setAddressHex] = useState<string>("");
   const { sendTransaction, connected, publicKey } = useWallet();
   const addressStore = container.resolve(AddressesStore);
+
+  useEffect(() => {
+    void addressStore.load();
+  }, []);
 
   const submitForm = (e: MouseEvent) => {
     e.preventDefault();
@@ -54,9 +76,11 @@ export const Addresses: FC = observer(() => {
     void addressStore.handleAddressSubmit(address, publicKey, sendTransaction);
   };
 
+  // console.log(new Keypair().publicKey.toString());
+
   return (
     <AddressesContainer>
-      <Heading>Experiments</Heading>
+      <Heading>Addresses</Heading>
       <Input
         placeholder={"title"}
         value={title}
@@ -71,6 +95,14 @@ export const Addresses: FC = observer(() => {
         type={"text"}
       />
       <Button onClick={submitForm}>Submit</Button>
+      <AddressList>
+        {addressStore.addressesList.map((address) => (
+          <Address>
+            <span>{address.title}</span>
+            <span>{address.hex}</span>
+          </Address>
+        ))}
+      </AddressList>
     </AddressesContainer>
   );
 });

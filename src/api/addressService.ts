@@ -5,7 +5,8 @@ import {
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import type { AddressLayout } from "@utils/addressLayout";
+import type { Address } from "@typings/addresses";
+import { AddressLayout } from "@utils/addressLayout";
 import { logger } from "@utils/logger";
 import { singleton } from "tsyringe";
 
@@ -75,5 +76,37 @@ export class AddressService {
 
       return false;
     }
+  }
+
+  public async getAddresses(): Promise<Address[]> {
+    const connection = await this._settings.getConnection();
+    const addressProgramId = await this._remoteConfig.getKey(
+      "ADDRESS_PROGRAM_ID"
+    );
+
+    const programAccounts = await connection.getProgramAccounts(
+      new PublicKey(addressProgramId.asString())
+    );
+
+    const addresses = programAccounts
+      .map((acc) => {
+        const deserializedAddressInfo = AddressLayout.deserialize(
+          acc.account.data
+        );
+
+        if (deserializedAddressInfo) {
+          return {
+            title: deserializedAddressInfo.title,
+            hex: deserializedAddressInfo.hex,
+          };
+        }
+
+        return null;
+      })
+      .filter(function isAddress(val: Address | null): val is Address {
+        return Boolean(val);
+      });
+
+    return addresses;
   }
 }

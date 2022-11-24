@@ -1,19 +1,16 @@
 import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
 import type { PublicKey } from "@solana/web3.js";
+import type { Address } from "@typings/addresses";
 import type { AddressLayout } from "@utils/addressLayout";
-import { logger } from "@utils/logger";
 import { action, makeObservable, observable, runInAction } from "mobx";
+import { pick } from "ramda";
 import { singleton } from "tsyringe";
 
 import { AddressService } from "../api/addressService";
-
-type Address = {
-  title: string;
-  hex: string;
-};
+import type { BaseStore } from "./baseStore";
 
 @singleton()
-export class AddressesStore {
+export class AddressesStore implements BaseStore {
   public isLoading = true;
   public addressesList: Address[] = [];
 
@@ -29,10 +26,10 @@ export class AddressesStore {
     address: AddressLayout,
     publicKey: PublicKey,
     sendTransaction: WalletAdapterProps["sendTransaction"]
-  ): Promise<boolean> {
+  ): Promise<void> {
     this.isLoading = true;
 
-    const resp = await this._addressService.submitAddress(
+    const success = await this._addressService.submitAddress(
       address,
       publicKey,
       sendTransaction
@@ -42,17 +39,26 @@ export class AddressesStore {
       this.isLoading = false;
     });
 
-    return resp;
-  }
-
-  public loadAddresses(publicKey: PublicKey): void {
-    if (!this.addressesList.length) {
-      void this.getAddresses(publicKey);
+    if (success) {
+      const newUiAddress = pick<AddressLayout, "title" | "hex">(
+        ["title", "hex"],
+        address
+      ) as Address;
+      this.addressesList.push(newUiAddress);
     }
   }
 
-  private getAddresses(publicKey: PublicKey): void {
-    // @TODO to implement
-    logger.info(publicKey);
+  public load(): void {
+    if (!this.addressesList.length) {
+      void this.getAddresses();
+    }
+  }
+
+  private async getAddresses(): Promise<void> {
+    const addresses = await this._addressService.getAddresses();
+
+    runInAction(() => {
+      this.addressesList = addresses;
+    });
   }
 }
