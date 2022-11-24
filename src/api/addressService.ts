@@ -5,7 +5,7 @@ import {
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import type { Address } from "@typings/addresses";
+import type { Address, ProgramVariant } from "@typings/addresses";
 import { AddressLayout } from "@utils/addressLayout";
 import { logger } from "@utils/logger";
 import * as bs58 from "bs58";
@@ -24,9 +24,10 @@ export class AddressService {
   public async submitAddress(
     address: AddressLayout,
     publicKey: PublicKey,
-    sendTransaction: WalletAdapterProps["sendTransaction"]
+    sendTransaction: WalletAdapterProps["sendTransaction"],
+    variant: ProgramVariant
   ): Promise<boolean> {
-    const buffer = address.serialize();
+    const buffer = address.serialize(variant);
     const connection = await this._settings.getConnection();
     const addressProgramId = await this._remoteConfig.getKey(
       "ADDRESS_PROGRAM_ID"

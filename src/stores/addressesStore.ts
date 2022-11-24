@@ -1,6 +1,7 @@
 import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
 import type { PublicKey } from "@solana/web3.js";
 import type { Address } from "@typings/addresses";
+import { ProgramVariant } from "@typings/addresses";
 import type { AddressLayout } from "@utils/addressLayout";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { pick } from "ramda";
@@ -13,7 +14,7 @@ import { LifeCycle } from "./lifecycle";
 @singleton()
 export class AddressesStore extends LifeCycle implements BaseStore {
   public isLoading = true;
-  public addressesList: Address[] = [];
+  public addressesList: Map<string, string> = new Map();
 
   constructor(private _addressService: AddressService) {
     super();
@@ -33,10 +34,17 @@ export class AddressesStore extends LifeCycle implements BaseStore {
   ): Promise<void> {
     this.isLoading = true;
 
+    const variant = Array.from(this.addressesList.keys()).find(
+      (title) => title === address.title
+    )
+      ? ProgramVariant.Update
+      : ProgramVariant.Create;
+
     const success = await this._addressService.submitAddress(
       address,
       publicKey,
-      sendTransaction
+      sendTransaction,
+      variant
     );
 
     runInAction(() => {
@@ -48,12 +56,15 @@ export class AddressesStore extends LifeCycle implements BaseStore {
         ["title", "hex"],
         address
       ) as Address;
-      this.addressesList.push(newUiAddress);
+
+      this.addressesList.set(newUiAddress.title, newUiAddress.hex);
+
+      return;
     }
   }
 
   public load(): void {
-    if (!this.addressesList.length) {
+    if (!this.addressesList.size) {
       void this.getAddresses();
     }
   }
@@ -66,7 +77,9 @@ export class AddressesStore extends LifeCycle implements BaseStore {
     );
 
     runInAction(() => {
-      this.addressesList = filteredAddresses;
+      for (const address of filteredAddresses) {
+        this.addressesList.set(address.title, address.hex);
+      }
     });
 
     this.throttledLoading(false);
@@ -76,7 +89,9 @@ export class AddressesStore extends LifeCycle implements BaseStore {
     const addresses = await this._addressService.getAddresses();
 
     runInAction(() => {
-      this.addressesList = addresses;
+      for (const address of addresses) {
+        this.addressesList.set(address.title, address.hex);
+      }
     });
 
     this.throttledLoading(false);

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import type { Layout } from "@project-serum/borsh";
 import * as borsh from "@project-serum/borsh";
+import type { ProgramVariant } from "@typings/addresses";
 import { logger } from "@utils/logger";
 
 const INITIAL_BUFFER_SIZE = 1000;
@@ -26,10 +27,10 @@ export class AddressLayout {
     borsh.str("hex"),
   ]) as Layout<AddressLayout>;
 
-  public serialize(): Buffer {
+  public serialize(variant: ProgramVariant): Buffer {
     const buffer = Buffer.alloc(INITIAL_BUFFER_SIZE);
 
-    this.borshInstructionSchema.encode({ ...this, variant: 1 }, buffer);
+    this.borshInstructionSchema.encode({ ...this, variant: variant }, buffer);
 
     return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer));
   }

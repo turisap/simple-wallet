@@ -6,6 +6,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { AddressesStore } from "@stores/addressesStore";
 import { alignCenter, Button } from "@styled/layout";
 import { AddressLayout } from "@utils/addressLayout";
+import { logger } from "@utils/logger";
 import throttle from "lodash.throttle";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
@@ -55,6 +56,8 @@ const Address = styled.div`
   grid-template-columns: 100px 1fr;
 `;
 
+// @FRIDAY next delete addresses (PDA)
+
 export const Addresses: FC = observer(() => {
   const [title, setTitle] = useState<string>("");
   const [addressHex, setAddressHex] = useState<string>("");
@@ -87,7 +90,13 @@ export const Addresses: FC = observer(() => {
 
     const address = new AddressLayout(title, addressHex);
 
-    void addressStore.handleAddressSubmit(address, publicKey, sendTransaction);
+    addressStore
+      .handleAddressSubmit(address, publicKey, sendTransaction)
+      .catch(logger.error)
+      .finally(() => {
+        setTitle("");
+        setAddressHex("");
+      });
   };
 
   return (
@@ -119,12 +128,14 @@ export const Addresses: FC = observer(() => {
         {!addressStore.isLoading && <span>Address list</span>}
         {addressStore.isLoading && <Loader />}
         {!addressStore.isLoading &&
-          addressStore.addressesList.map((address) => (
-            <Address key={address.hex}>
-              <span>{address.title}</span>
-              <span>{address.hex}</span>
-            </Address>
-          ))}
+          Array.from(addressStore.addressesList.entries()).map(
+            ([addressTitle, hex]) => (
+              <Address key={hex}>
+                <span>{addressTitle}</span>
+                <span>{hex}</span>
+              </Address>
+            )
+          )}
       </AddressList>
     </>
   );
