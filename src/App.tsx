@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { LayoutComponent } from "@components/Layout";
 import { Connect } from "@pages/connect/Connect";
-import Experiments from "@pages/experiments/Experiments";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
@@ -21,6 +20,8 @@ import { ThemeProvider } from "styled-components";
 
 const Tokens = lazy(() => import("./pages/tokens"));
 const NFTs = lazy(() => import("./pages/nfts"));
+const Experiments = lazy(() => import("./pages/experiments/Experiments"));
+const Addresses = lazy(() => import("./pages/addresses/Addresses"));
 
 const TokensPage = () => (
   <Suspense fallback={<div>Page is Loading...</div>}>
@@ -40,15 +41,29 @@ const ExperimentsPage = () => (
   </Suspense>
 );
 
-// @TODO save favourite addresses to PDA
-function App() {
-  const network = WalletAdapterNetwork.Devnet;
+const AddressesPage = () => (
+  <Suspense fallback={<div>Page is Loading...</div>}>
+    <Addresses />
+  </Suspense>
+);
 
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+// @TODO save favourite addresses to PDA
+// @TODO remove all index.ts
+function App() {
+  // const network = WalletAdapterNetwork.Devnet;
+
+  // const endpoint = useMemo(() => "http://127.0.0.1:8899", [network]);
+
+  // const wallets = useMemo(
+  //   () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
+  //   [network]
+  // );
+
+  const endpoint = useMemo(() => "http://127.0.0.1:8899", []);
 
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
-    [network]
+    []
   );
 
   return (
@@ -62,7 +77,8 @@ function App() {
                 <Route path="/" element={<Connect />} />
                 <Route element={<LayoutComponent />}>
                   <Route path="wallet" element={<TokensPage />} />
-                  <Route path="nfts" element={<NFTsPage />} />
+                  <Route path="NFTs" element={<NFTsPage />} />
+                  <Route path="addresses" element={<AddressesPage />} />
                   <Route
                     path="chain-experiments"
                     element={<ExperimentsPage />}

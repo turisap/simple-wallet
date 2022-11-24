@@ -24,6 +24,7 @@ const NavigationBar = styled.div`
 `;
 
 const NavigationButton = styled(Button)<{ isActive: boolean }>`
+  text-transform: capitalize;
   width: 100%;
   ${(props) =>
     props.isActive
@@ -47,6 +48,7 @@ const ContentContainer = styled.div`
 export const LayoutComponent: FC = () => {
   const { connected } = useWallet();
   const location = useLocation();
+  const links = ["/wallet", "/NFTs", "/addresses"];
 
   if (!connected) {
     return <Navigate to={"/"} state={{ redirectTo: location.pathname }} />;
@@ -55,16 +57,15 @@ export const LayoutComponent: FC = () => {
   return (
     <LayoutContainer>
       <NavigationBar>
-        <NavLink to={"/wallet"}>
-          {({ isActive }) => (
-            <NavigationButton isActive={isActive}>Wallet</NavigationButton>
-          )}
-        </NavLink>
-        <NavLink to={"/nfts"}>
-          {({ isActive }) => (
-            <NavigationButton isActive={isActive}>NFTs</NavigationButton>
-          )}
-        </NavLink>
+        {links.map((link) => (
+          <NavLink to={link} key={link}>
+            {({ isActive }) => (
+              <NavigationButton isActive={isActive}>
+                {link.replace("/", "")}
+              </NavigationButton>
+            )}
+          </NavLink>
+        ))}
         <StyledDisconnectButton />
       </NavigationBar>
       <ContentContainer>
