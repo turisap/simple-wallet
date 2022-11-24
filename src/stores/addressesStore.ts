@@ -8,17 +8,21 @@ import { singleton } from "tsyringe";
 
 import { AddressService } from "../api/addressService";
 import type { BaseStore } from "./baseStore";
+import { LifeCycle } from "./lifecycle";
 
 @singleton()
-export class AddressesStore implements BaseStore {
+export class AddressesStore extends LifeCycle implements BaseStore {
   public isLoading = true;
   public addressesList: Address[] = [];
 
   constructor(private _addressService: AddressService) {
+    super();
+
     makeObservable<AddressesStore, "getAddresses">(this, {
       isLoading: observable,
-      getAddresses: action,
       addressesList: observable,
+      getAddresses: action,
+      setSearch: action,
     });
   }
 
@@ -54,12 +58,27 @@ export class AddressesStore implements BaseStore {
     }
   }
 
+  public async setSearch(search: string): Promise<void> {
+    this.throttledLoading(true);
+
+    const filteredAddresses = await this._addressService.getFilteredAddresses(
+      search
+    );
+
+    runInAction(() => {
+      this.addressesList = filteredAddresses;
+    });
+
+    this.throttledLoading(false);
+  }
+
   private async getAddresses(): Promise<void> {
     const addresses = await this._addressService.getAddresses();
 
     runInAction(() => {
       this.addressesList = addresses;
-      this.isLoading = false;
     });
+
+    this.throttledLoading(false);
   }
 }

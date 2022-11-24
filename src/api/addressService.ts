@@ -8,6 +8,7 @@ import {
 import type { Address } from "@typings/addresses";
 import { AddressLayout } from "@utils/addressLayout";
 import { logger } from "@utils/logger";
+import * as bs58 from "bs58";
 import { singleton } from "tsyringe";
 
 import { RemoteConfigService } from "./remoteConfigService";
@@ -108,5 +109,48 @@ export class AddressService {
       });
 
     return addresses;
+  }
+
+  public async getFilteredAddresses(search: string): Promise<Address[]> {
+    if (!search) {
+      return this.getAddresses();
+    }
+
+    const connection = await this._settings.getConnection();
+    const addressProgramId = await this._remoteConfig.getKey(
+      "ADDRESS_PROGRAM_ID"
+    );
+    const programId = new PublicKey(addressProgramId.asString());
+
+    const accounts = await connection.getProgramAccounts(programId, {
+      dataSlice: { offset: 1, length: 18 },
+      filters: [
+        {
+          memcmp: {
+            offset: 5,
+            bytes: bs58.encode(Buffer.from(search)),
+          },
+        },
+      ],
+    });
+
+    const pubKeys = accounts.map((acc) => acc.pubkey);
+
+    const filteredPDAs = await connection.getMultipleAccountsInfo(pubKeys);
+
+    const favoriteAddresses = filteredPDAs.reduce<Address[]>((acc, curr) => {
+      const favoriteAddress = AddressLayout.deserialize(curr?.data);
+
+      if (favoriteAddress) {
+        return [...acc, favoriteAddress];
+      }
+
+      return acc;
+    }, []);
+
+    return favoriteAddresses.map((a) => ({
+      title: a.title,
+      hex: a.hex,
+    }));
   }
 }

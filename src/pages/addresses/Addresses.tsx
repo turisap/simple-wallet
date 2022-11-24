@@ -1,16 +1,17 @@
 import type { FC, MouseEvent } from "react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Loader from "@components/Loader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { AddressesStore } from "@stores/addressesStore";
 import { alignCenter, Button } from "@styled/layout";
 import { AddressLayout } from "@utils/addressLayout";
+import throttle from "lodash.throttle";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { container } from "tsyringe";
 
-import { MAX_ADDRESS_TITLE_LENGTH } from "../../constants";
+import { MAX_ADDRESS_TITLE_LENGTH, THROTTLE_SEARCH } from "../../constants";
 
 const AddressesContainer = styled.div`
   display: grid;
@@ -57,12 +58,21 @@ const Address = styled.div`
 export const Addresses: FC = observer(() => {
   const [title, setTitle] = useState<string>("");
   const [addressHex, setAddressHex] = useState<string>("");
+  const [search, setSearch] = useState("");
   const { sendTransaction, connected, publicKey } = useWallet();
   const addressStore = container.resolve(AddressesStore);
+  const throttledCallback = useCallback(
+    throttle((s: string) => addressStore.setSearch(s), THROTTLE_SEARCH),
+    [addressStore]
+  );
 
   useEffect(() => {
     void addressStore.load();
   }, []);
+
+  useEffect(() => {
+    void throttledCallback(search);
+  }, [search]);
 
   const submitForm = (e: MouseEvent) => {
     e.preventDefault();
@@ -99,17 +109,24 @@ export const Addresses: FC = observer(() => {
           onChange={(e) => setAddressHex(e.target.value)}
           type={"text"}
         />
+        <Input
+          placeholder={"search"}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          type={"text"}
+        />
         <Button onClick={submitForm}>Submit</Button>
       </AddressesContainer>
       <AddressList isLoading={addressStore.isLoading}>
         {!addressStore.isLoading && <span>Address list</span>}
         {addressStore.isLoading && <Loader />}
-        {addressStore.addressesList.map((address) => (
-          <Address key={address.hex}>
-            <span>{address.title}</span>
-            <span>{address.hex}</span>
-          </Address>
-        ))}
+        {!addressStore.isLoading &&
+          addressStore.addressesList.map((address) => (
+            <Address key={address.hex}>
+              <span>{address.title}</span>
+              <span>{address.hex}</span>
+            </Address>
+          ))}
       </AddressList>
     </>
   );
