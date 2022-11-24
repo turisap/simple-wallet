@@ -996,6 +996,8 @@ dependencies = [
 name = "solana-hello-world-local"
 version = "0.1.0"
 dependencies = [
+ "borsh",
+ "borsh-derive",
  "solana-program",
 ]
 
