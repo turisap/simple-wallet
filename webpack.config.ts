@@ -20,7 +20,7 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import type { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 import WebpackBar from "webpackbar";
 
-const DEMO_PORT = 8888;
+const APP_PORT = 8888;
 const PUBLIC_PATH = path.join(__dirname, "public");
 const SOURCE_PATH = path.resolve(__dirname, "src");
 const __APP_TITLE__ = "Simple Wallet";
@@ -57,7 +57,13 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
   const infraPlugins: WebpackPluginInstance[] = [];
 
   if (__DEVELOPMENT__) {
-    devPlugins.push(new WebpackBar());
+    devPlugins.push(
+      new WebpackBar(),
+
+      new DotenvWebpackPlugin({
+        path: path.resolve(__dirname, ".env.development"),
+      })
+    );
   }
 
   if (__PRODUCTION__) {
@@ -117,9 +123,9 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
       historyApiFallback: true,
       compress: true,
       hot: true,
-      port: DEMO_PORT,
+      port: APP_PORT,
       onAfterSetupMiddleware: () => {
-        openBrowser(`http://localhost:${DEMO_PORT}`);
+        openBrowser(`http://localhost:${APP_PORT}`);
       },
     },
 
@@ -191,10 +197,6 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
     },
 
     plugins: [
-      new DotenvWebpackPlugin({
-        path: path.resolve(__dirname, ".env.development"),
-      }),
-
       // @TODO check how it works for prod builds
       new MiniCssExtractPlugin({
         filename: __PRODUCTION__ ? "[name]-[contenthash].css" : "[name].css",
