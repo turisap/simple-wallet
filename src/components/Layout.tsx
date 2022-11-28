@@ -9,7 +9,7 @@ import styled from "styled-components";
 
 const LayoutContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1fr 4fr;
   grid-template-rows: calc(100vh - 160px);
   max-width: 850px;
   padding: 100px 60px 60px;
@@ -50,7 +50,7 @@ const ContentContainer = styled.div`
 export const LayoutComponent: FC = () => {
   const { connected } = useWallet();
   const location = useLocation();
-  const links = ["/wallet", "/NFTs", "/addresses", "/send"];
+  const links = ["/wallet", "/NFTs", "/addresses", "/send", "/receive"];
 
   if (!connected) {
     return <Navigate to={"/"} state={{ redirectTo: location.pathname }} />;

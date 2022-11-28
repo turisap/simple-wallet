@@ -18,6 +18,7 @@ const NFTs = lazy(() => import("./pages/nfts/NFTs"));
 const Experiments = lazy(() => import("./pages/experiments/Experiments"));
 const Addresses = lazy(() => import("./pages/addresses/Addresses"));
 const Send = lazy(() => import("./pages/send/Send"));
+const Receive = lazy(() => import("./pages/receive/Receive"));
 
 const PageLoading = () => <div>Page is Loading..</div>;
 
@@ -51,6 +52,11 @@ const SendPage = () => (
   </Suspense>
 );
 
+const ReceivePage = () => (
+  <Suspense fallback={<PageLoading />}>
+    <Receive />
+  </Suspense>
+);
 // @FRIDAY next delete addresses (PDA)
 // @TODO DO SEND and receive
 // @TODO DEPLOY to gh-pages
@@ -74,6 +80,7 @@ function App() {
               <Route path="/" element={<Connect />} />
               <Route element={<LayoutComponent />}>
                 <Route path="wallet" element={<TokensPage />} />
+                <Route path="receive" element={<ReceivePage />} />
                 <Route path="NFTs" element={<NFTsPage />} />
                 <Route path="send" element={<SendPage />} />
                 <Route path="addresses" element={<AddressesPage />} />
