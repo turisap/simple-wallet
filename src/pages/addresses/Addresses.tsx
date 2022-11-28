@@ -2,9 +2,11 @@ import type { FC, MouseEvent } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 
 import Loader from "@components/Loader";
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { AddressesStore } from "@stores/addressesStore";
-import { alignCenter, Button } from "@styled/layout";
+import { Input } from "@styled/common";
+import { alignCenter, Button, Heading } from "@styled/layout";
 import { AddressLayout } from "@utils/addressLayout";
 import { logger } from "@utils/logger";
 import throttle from "lodash.throttle";
@@ -19,20 +21,6 @@ const AddressesContainer = styled.div`
   grid-gap: 16px;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 20px 48px 48px;
-`;
-
-const Heading = styled.h2`
-  color: ${({ theme }) => theme.text.plate};
-  font-size: 20px;
-  grid-column: 1 / -1;
-`;
-
-const Input = styled.input`
-  background: ${({ theme }) => theme.backgrounds.input};
-  border: none;
-  border-radius: ${({ theme }) => theme.radius.button};
-  color: ${({ theme }) => theme.text.input};
-  padding: 8px;
 `;
 
 const AddressList = styled.div<{ isLoading: boolean }>`
@@ -55,8 +43,6 @@ const Address = styled.div`
   grid-gap: 8px;
   grid-template-columns: 100px 1fr;
 `;
-
-// @FRIDAY next delete addresses (PDA)
 
 export const Addresses: FC = observer(() => {
   const [title, setTitle] = useState<string>("");
@@ -81,11 +67,11 @@ export const Addresses: FC = observer(() => {
     e.preventDefault();
 
     if (!connected) {
-      throw new Error("Please connect your wallet");
+      throw new WalletNotConnectedError();
     }
 
     if (!publicKey) {
-      throw new Error("Please connect your wallet");
+      throw new WalletNotConnectedError();
     }
 
     const address = new AddressLayout(title, addressHex);

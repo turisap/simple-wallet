@@ -9,6 +9,7 @@ export const theme: DefaultTheme = {
     button: "#000",
     plate: "#000",
     input: "#000",
+    disabled: "#ccc",
   },
   borders: {
     button: "#eee",
@@ -19,6 +20,7 @@ export const theme: DefaultTheme = {
     buttonHover: "#000",
     plate: "#eee",
     input: "#eee",
+    error: "#731919",
   },
   radius: {
     plate: "16px",

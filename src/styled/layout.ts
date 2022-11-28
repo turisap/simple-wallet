@@ -40,3 +40,9 @@ export const alignCenter = css`
   justify-content: center;
   justify-items: center;
 `;
+
+export const Heading = styled.h2`
+  color: ${({ theme }) => theme.text.plate};
+  font-size: 20px;
+  grid-column: 1 / -1;
+`;

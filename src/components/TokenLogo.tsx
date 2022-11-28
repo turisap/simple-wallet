@@ -3,11 +3,11 @@ import React from "react";
 
 import styled from "styled-components";
 
-const LogoStyled = styled.img`
+const LogoStyled = styled.img<Props>`
   border-radius: 50%;
   grid-row: 1 / -1;
-  height: 50px;
-  width: 50px;
+  height: ${(props) => (props.size ? `${props.size}px` : "50px")};
+  width: ${(props) => (props.size ? `${props.size}px` : "50px")};
 
   &:not([src]) {
     content: url("data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==");
@@ -16,10 +16,11 @@ const LogoStyled = styled.img`
 
 type Props = {
   src?: string;
+  size?: number;
 };
 
-export const TokenLogo: FC<Props & HTMLAttributes<HTMLDivElement>> = ({
-  src,
-}) => {
-  return <LogoStyled src={src} />;
+export const TokenLogo: FC<Props & HTMLAttributes<HTMLDivElement>> = (
+  props
+) => {
+  return <LogoStyled src={props.src} size={props.size} />;
 };

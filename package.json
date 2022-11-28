@@ -7,10 +7,10 @@
     "@project-serum/borsh": "^0.2.5",
     "@saberhq/token-utils": "^1.14.9",
     "@solana/spl-token-registry": "^0.2.4574",
-    "@solana/wallet-adapter-base": "^0.9.18",
-    "@solana/wallet-adapter-react": "^0.15.24",
-    "@solana/wallet-adapter-react-ui": "^0.9.22",
-    "@solana/wallet-adapter-wallets": "^0.19.5",
+    "@solana/wallet-adapter-base": "^0.9.19",
+    "@solana/wallet-adapter-react": "^0.15.25",
+    "@solana/wallet-adapter-react-ui": "^0.9.23",
+    "@solana/wallet-adapter-wallets": "^0.19.6",
     "@solana/web3.js": "^1.66.2",
     "@types/dotenv-webpack": "^7.0.3",
     "@types/lodash.throttle": "^4.1.7",
@@ -31,9 +31,9 @@
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^5.3.4",
     "react-router-dom": "^6.4.3",
+    "react-select": "^5.6.1",
     "reflect-metadata": "^0.1.13",
     "reset-css": "^5.0.1",
-    "rxjs": "^7.5.7",
     "styled-components": "^5.3.6",
     "tsyringe": "^4.7.0"
   },
@@ -116,9 +116,6 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1",
     "webpackbar": "^5.0.2"
-  },
-  "resolutions": {
-    "@solana/wallet-adapter-react-ui@^0.9.22": "patch:@solana/wallet-adapter-react-ui@npm%3A0.9.22#./.yarn/patches/@solana-wallet-adapter-react-ui-npm-0.9.22-d9ac5fd893.patch"
   },
   "packageManager": "yarn@1.22.1"
 }

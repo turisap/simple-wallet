@@ -26,3 +26,10 @@ export type CoinGeckoRate = {
   roi: null;
   last_updated: Date;
 };
+
+export type TokenOption = {
+  value: string;
+  label: string;
+  amount?: string;
+  logo?: string;
+};

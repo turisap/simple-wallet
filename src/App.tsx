@@ -13,37 +13,51 @@ import { GlobalStyle } from "@styled/globalStyles";
 import { theme } from "@styled/theme";
 import { ThemeProvider } from "styled-components";
 
-const Tokens = lazy(() => import("./pages/tokens"));
-const NFTs = lazy(() => import("./pages/nfts"));
+const Tokens = lazy(() => import("./pages/tokens/Tokens"));
+const NFTs = lazy(() => import("./pages/nfts/NFTs"));
 const Experiments = lazy(() => import("./pages/experiments/Experiments"));
 const Addresses = lazy(() => import("./pages/addresses/Addresses"));
+const Send = lazy(() => import("./pages/send/Send"));
+
+const PageLoading = () => <div>Page is Loading..</div>;
 
 const TokensPage = () => (
-  <Suspense fallback={<div>Page is Loading...</div>}>
+  <Suspense fallback={<PageLoading />}>
     <Tokens />
   </Suspense>
 );
 
 const NFTsPage = () => (
-  <Suspense fallback={<div>Page is Loading...</div>}>
+  <Suspense fallback={<PageLoading />}>
     <NFTs />
   </Suspense>
 );
 
 const ExperimentsPage = () => (
-  <Suspense fallback={<div>Page is Loading...</div>}>
+  <Suspense fallback={<PageLoading />}>
     <Experiments />
   </Suspense>
 );
 
 const AddressesPage = () => (
-  <Suspense fallback={<div>Page is Loading...</div>}>
+  <Suspense fallback={<PageLoading />}>
     <Addresses />
   </Suspense>
 );
 
-// @TODO save favourite addresses to PDA
-// @TODO remove all index.ts
+const SendPage = () => (
+  <Suspense fallback={<PageLoading />}>
+    <Send />
+  </Suspense>
+);
+
+// @FRIDAY next delete addresses (PDA)
+// @TODO DO SEND and receive
+// @TODO DEPLOY to gh-pages
+// @TODO polish code
+// @TODO notifications
+// @TODO move all styled to @styled
+
 function App() {
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
@@ -61,6 +75,7 @@ function App() {
               <Route element={<LayoutComponent />}>
                 <Route path="wallet" element={<TokensPage />} />
                 <Route path="NFTs" element={<NFTsPage />} />
+                <Route path="send" element={<SendPage />} />
                 <Route path="addresses" element={<AddressesPage />} />
                 <Route path="chain-experiments" element={<ExperimentsPage />} />
               </Route>

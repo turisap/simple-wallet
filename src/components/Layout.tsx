@@ -50,7 +50,7 @@ const ContentContainer = styled.div`
 export const LayoutComponent: FC = () => {
   const { connected } = useWallet();
   const location = useLocation();
-  const links = ["/wallet", "/NFTs", "/addresses"];
+  const links = ["/wallet", "/NFTs", "/addresses", "/send"];
 
   if (!connected) {
     return <Navigate to={"/"} state={{ redirectTo: location.pathname }} />;
