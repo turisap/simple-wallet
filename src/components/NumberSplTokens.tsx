@@ -2,9 +2,8 @@ import type { FC } from "react";
 import React from "react";
 
 import type { WalletStore } from "@stores/walletStore";
+import { PlateWrapper } from "@styled/components";
 import { observer } from "mobx-react-lite";
-
-import { PlateWrapper } from "./SolAmount";
 
 type Props = {
   number: number;

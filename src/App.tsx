@@ -15,7 +15,6 @@ import { ThemeProvider } from "styled-components";
 
 const Tokens = lazy(() => import("./pages/tokens/Tokens"));
 const NFTs = lazy(() => import("./pages/nfts/NFTs"));
-const Experiments = lazy(() => import("./pages/experiments/Experiments"));
 const Addresses = lazy(() => import("./pages/addresses/Addresses"));
 const Send = lazy(() => import("./pages/send/Send"));
 const Receive = lazy(() => import("./pages/receive/Receive"));
@@ -31,12 +30,6 @@ const TokensPage = () => (
 const NFTsPage = () => (
   <Suspense fallback={<PageLoading />}>
     <NFTs />
-  </Suspense>
-);
-
-const ExperimentsPage = () => (
-  <Suspense fallback={<PageLoading />}>
-    <Experiments />
   </Suspense>
 );
 
@@ -58,7 +51,7 @@ const ReceivePage = () => (
   </Suspense>
 );
 // @FRIDAY next delete addresses (PDA)
-// @TODO DO SEND and receive
+// @TODO DO SEND
 // @TODO DEPLOY to gh-pages
 // @TODO polish code
 // @TODO notifications
@@ -84,7 +77,6 @@ function App() {
                 <Route path="NFTs" element={<NFTsPage />} />
                 <Route path="send" element={<SendPage />} />
                 <Route path="addresses" element={<AddressesPage />} />
-                <Route path="chain-experiments" element={<ExperimentsPage />} />
               </Route>
             </Routes>
           </BrowserRouter>
