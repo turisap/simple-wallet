@@ -52,10 +52,8 @@ const ReceivePage = () => (
 );
 // @FRIDAY next delete addresses (PDA)
 // @TODO DO SEND
-// @TODO DEPLOY to gh-pages
 // @TODO polish code
 // @TODO notifications
-// @TODO move all styled to @styled
 
 function App() {
   const wallets = useMemo(
