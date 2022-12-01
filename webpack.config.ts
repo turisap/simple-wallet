@@ -15,7 +15,7 @@ import type {
   Configuration as WebpackConfiguration,
   WebpackPluginInstance,
 } from "webpack";
-import webpack from "webpack";
+import webpack, { DefinePlugin } from "webpack";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import type { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 import WebpackBar from "webpackbar";
@@ -72,9 +72,26 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         verbose: false,
       }),
 
-      new ForkTsCheckerWebpackPlugin()
+      new ForkTsCheckerWebpackPlugin(),
+
+      new DefinePlugin({
+        "process.env": {
+          REMOTE_CONFIG_API_KEY: JSON.stringify(
+            process.env.REMOTE_CONFIG_API_KEY
+          ),
+          REMOTE_CONFIG_APP_ID: JSON.stringify(
+            process.env.REMOTE_CONFIG_APP_ID
+          ),
+          BASE_NAME: JSON.stringify(process.env.BASE_NAME),
+        },
+      })
     );
   }
+
+  console.log("**************************");
+  console.log(8888888888888);
+  console.log(99999999999999);
+  console.log(process.env.BASE_NAME);
 
   if (__ANALISE__) {
     infraPlugins.push(

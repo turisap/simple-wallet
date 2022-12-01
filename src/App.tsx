@@ -61,12 +61,15 @@ function App() {
     []
   );
 
+  console.log(process.env.REMOTE_CONFIG_API_KEY);
+  console.log(process.env.BASE_NAME);
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <WalletProvider wallets={wallets} autoConnect={true}>
         <WalletModalProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={process.env.BASE_NAME}>
             <Routes>
               <Route path="/" element={<Connect />} />
               <Route element={<LayoutComponent />}>

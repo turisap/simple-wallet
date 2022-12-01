@@ -20,6 +20,7 @@ jobs:
         env:
           REMOTE_CONFIG_API_KEY: ${{ secrets.REMOTE_CONFIG_API_KEY }}
           REMOTE_CONFIG_APP_ID: ${{ secrets.REMOTE_CONFIG_APP_ID }}
+          BASE_NAME: /simple-wallet
         run: |
           yarn install --frozen-lockfile
           yarn build
