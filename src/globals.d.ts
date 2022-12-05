@@ -14,3 +14,8 @@ declare module "*.png" {
   const value: string;
   export default value;
 }
+
+declare module "ga-gtag" {
+  function install(val: string): void;
+  export { install };
+}
