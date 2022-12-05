@@ -14,8 +14,6 @@ ReactGA.initialize(process.env.GOOGLE_TRACKING_ID);
 
 extendBorsh();
 
-console.log(process.env.GOOGLE_TRACKING_ID);
-console.log(process.env.REMOTE_CONFIG_API_KEY);
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

@@ -51,10 +51,6 @@ const ReceivePage = () => (
   </Suspense>
 );
 
-// @TODO DO SEND
-// @TODO polish code
-// @TODO notifications
-
 function App() {
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
