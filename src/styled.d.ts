@@ -1,6 +1,6 @@
 import "styled-components";
 
-type Tokens = "page" | "button" | "plate";
+type Tokens = "page" | "button" | "plate" | "input" | "disabled";
 
 type StyleSet = {
   [T in Tokens]?: string;
@@ -8,6 +8,7 @@ type StyleSet = {
 
 type TextSet = StyleSet & {
   buttonHover: string;
+  error: string;
 };
 
 declare module "styled-components" {

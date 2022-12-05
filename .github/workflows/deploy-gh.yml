@@ -1,0 +1,33 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install and Build 🔧
+        env:
+          GOOGLE_TRACKING_ID: ${{ secrets.GOOGLE_TRACKING_ID }}
+          REMOTE_CONFIG_API_KEY: ${{ secrets.REMOTE_CONFIG_API_KEY }}
+          REMOTE_CONFIG_APP_ID: ${{ secrets.REMOTE_CONFIG_APP_ID }}
+          BASE_NAME: /simple-wallet
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: build

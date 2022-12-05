@@ -17,7 +17,12 @@ const firebaseConfig = {
   measurementId: "G-J2RW3QQW88",
 };
 
-type ConfigKeys = "RPC_ENDPOINT" | "RATES_ENDPOINT" | "TOKEN_LIST_ENDPOINT";
+type ConfigKeys =
+  | "RPC_ENDPOINT"
+  | "RATES_ENDPOINT"
+  | "TOKEN_LIST_ENDPOINT"
+  | "ADDRESS_PROGRAM_ID"
+  | "CLUSTER";
 
 @singleton()
 export class RemoteConfigService {

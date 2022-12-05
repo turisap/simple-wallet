@@ -4,20 +4,7 @@ import { Navigate, useLocation } from "react-router-dom";
 
 import Loader from "@components/Loader";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import styled from "styled-components";
-
-const ConnectPage = styled.div`
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-`;
-
-const StyledConnectButton = styled(WalletMultiButton)`
-  background: ${(props) => props.theme.primary};
-  border-radius: 16px;
-`;
+import { ConnectPage, StyledConnectButton } from "@styled/connect";
 
 type AuthState = {
   redirectTo: string;

@@ -6,6 +6,7 @@ import DotenvWebpackPlugin from "dotenv-webpack";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { DuplicatesPlugin } from "inspectpack/plugin";
+import type { LogLevelDesc } from "loglevel";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
 import path from "path";
@@ -14,12 +15,12 @@ import type {
   Configuration as WebpackConfiguration,
   WebpackPluginInstance,
 } from "webpack";
-import webpack from "webpack";
+import webpack, { DefinePlugin } from "webpack";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import type { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 import WebpackBar from "webpackbar";
 
-const DEMO_PORT = 8888;
+const APP_PORT = 8888;
 const PUBLIC_PATH = path.join(__dirname, "public");
 const SOURCE_PATH = path.resolve(__dirname, "src");
 const __APP_TITLE__ = "Simple Wallet";
@@ -33,6 +34,7 @@ interface Configuration
 type CustomEnv = {
   testing: boolean;
   analise: boolean;
+  loglevel: LogLevelDesc;
 };
 
 type ArgV = {
@@ -44,6 +46,7 @@ type ConfigFn = (env: CustomEnv, argv: ArgV) => Configuration;
 const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
   const __DEVELOPMENT__ = argv.mode === "development";
   const __PRODUCTION__ = argv.mode === "production";
+  const __LOGLEVEL__ = env.loglevel;
   const __ANALISE__ = env.analise;
 
   process.env.NODE_ENV = argv.mode;
@@ -54,7 +57,13 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
   const infraPlugins: WebpackPluginInstance[] = [];
 
   if (__DEVELOPMENT__) {
-    devPlugins.push(new WebpackBar());
+    devPlugins.push(
+      new WebpackBar(),
+
+      new DotenvWebpackPlugin({
+        path: path.resolve(__dirname, ".env.development"),
+      })
+    );
   }
 
   if (__PRODUCTION__) {
@@ -63,7 +72,20 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         verbose: false,
       }),
 
-      new ForkTsCheckerWebpackPlugin()
+      new ForkTsCheckerWebpackPlugin(),
+
+      new DefinePlugin({
+        "process.env": {
+          GOOGLE_TRACKING_ID: JSON.stringify(process.env.GOOGLE_TRACKING_ID),
+          REMOTE_CONFIG_API_KEY: JSON.stringify(
+            process.env.REMOTE_CONFIG_API_KEY
+          ),
+          REMOTE_CONFIG_APP_ID: JSON.stringify(
+            process.env.REMOTE_CONFIG_APP_ID
+          ),
+          BASE_NAME: JSON.stringify(process.env.BASE_NAME),
+        },
+      })
     );
   }
 
@@ -114,9 +136,9 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
       historyApiFallback: true,
       compress: true,
       hot: true,
-      port: DEMO_PORT,
+      port: APP_PORT,
       onAfterSetupMiddleware: () => {
-        openBrowser(`http://localhost:${DEMO_PORT}`);
+        openBrowser(`http://localhost:${APP_PORT}`);
       },
     },
 
@@ -188,10 +210,6 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
     },
 
     plugins: [
-      new DotenvWebpackPlugin({
-        path: path.resolve(__dirname, ".env.development"),
-      }),
-
       // @TODO check how it works for prod builds
       new MiniCssExtractPlugin({
         filename: __PRODUCTION__ ? "[name]-[contenthash].css" : "[name].css",
@@ -207,6 +225,7 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
         __DEVELOPMENT__: JSON.stringify(__DEVELOPMENT__),
         __PRODUCTION__: JSON.stringify(__PRODUCTION__),
         __APP_TITLE__: JSON.stringify(__APP_TITLE__),
+        __LOGLEVEL__: JSON.stringify(__LOGLEVEL__),
       }),
 
       new HtmlWebpackPlugin({
