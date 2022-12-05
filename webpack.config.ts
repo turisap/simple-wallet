@@ -76,6 +76,7 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
 
       new DefinePlugin({
         "process.env": {
+          GOOGLE_TRACKING_ID: JSON.stringify(process.env.GOOGLE_TRACKING_ID),
           REMOTE_CONFIG_API_KEY: JSON.stringify(
             process.env.REMOTE_CONFIG_API_KEY
           ),
@@ -87,11 +88,6 @@ const config: ConfigFn = (env: CustomEnv, argv: ArgV) => {
       })
     );
   }
-
-  console.log("**************************");
-  console.log(8888888888888);
-  console.log(99999999999999);
-  console.log(process.env.BASE_NAME);
 
   if (__ANALISE__) {
     infraPlugins.push(

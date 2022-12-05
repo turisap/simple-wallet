@@ -50,7 +50,7 @@ const ReceivePage = () => (
     <Receive />
   </Suspense>
 );
-// @FRIDAY next delete addresses (PDA)
+
 // @TODO DO SEND
 // @TODO polish code
 // @TODO notifications
@@ -60,9 +60,6 @@ function App() {
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
     []
   );
-
-  console.log(process.env.REMOTE_CONFIG_API_KEY);
-  console.log(process.env.BASE_NAME);
 
   return (
     <ThemeProvider theme={theme}>

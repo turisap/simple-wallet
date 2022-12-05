@@ -51,12 +51,33 @@ export const Heading = styled.h2`
 export const LayoutContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr;
-  grid-template-rows: calc(100vh - 160px);
+  grid-template-rows: 100px calc(100vh - 100px);
   max-width: 850px;
-  padding: 100px 60px 60px;
+  padding: 0 60px 100px 60px;
 `;
 
-export const NavigationBar = styled.div`
+export const TopBar = styled.div`
+  align-self: start;
+  grid-column: 2 / 3;
+  justify-self: end;
+  margin-top: 16px;
+`;
+
+export const Cluster = styled.div`
+  align-items: center;
+  background: ${(props) => props.theme.primary};
+  border: none;
+  border-radius: 8px;
+  color: ${(props) => props.theme.text.button};
+  display: flex;
+  font-weight: 600;
+  height: 100%;
+  justify-content: center;
+  padding: 8px 12px;
+  text-transform: capitalize;
+`;
+
+export const NavigationMenu = styled.div`
   align-items: stretch;
   display: grid;
   grid-gap: 16px;
