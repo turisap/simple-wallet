@@ -31,7 +31,8 @@ yarn serve
 
 ## Rust and smart contracts
 This wallet provides a functionality to write / update favorite addresses on-chain
-using Rust (it lies in `rust/address-list/src`) and deployed to the dev net.
+using Rust (it lies in `rust/address-list/src`) and deployed to the dev net. The addresses are saved in PDAs, which are 
+unique for each user (pubKey).
 
 
 ![Screen](.github/approve.png?raw=true "Title")
